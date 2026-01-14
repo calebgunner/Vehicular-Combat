@@ -435,11 +435,13 @@ MonoBehaviour:
   isMoving: 0
   isAccelarating: 0
   isReversing: 0
-  speed: 0
   stationarySpeed: 0
-  reversingSpeed: 10
-  accelaratingSpeed: 13
-  combatSpeed: 9
+  reversingSpeed: 14
+  accelaratingSpeed: 20
+  combatSpeed: 12
+  rotateLeft: 0
+  rotateRight: 0
+  rotateSpeed: 2.5
   theVehicleMovement: 0
   rb: {fileID: 0}
   movementInput: {x: 0, y: 0, z: 0}
@@ -615,7 +617,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625320072}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 23429a427b5626f418ba47cafbdcd79f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

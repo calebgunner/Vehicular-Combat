@@ -4,6 +4,19 @@ using UnityEngine.InputSystem;
 
 public class VehicleControl : MonoBehaviour
 {
+    // TIDY UP THE CODE FIRST
+    // WORK ON THE CAMERA SYSTEM
+
+
+
+
+
+
+
+
+
+
+
     [Header("activated mode")]
     public bool combatModeActivated;
     public bool isMoving;
@@ -11,7 +24,7 @@ public class VehicleControl : MonoBehaviour
     public bool isReversing;
 
     [Space]
-    public float speed;
+    float speed;
     public float stationarySpeed;
     public float reversingSpeed;
     public float accelaratingSpeed;
@@ -22,10 +35,12 @@ public class VehicleControl : MonoBehaviour
     Vector3 moveVelocity;
 
     [Space]
-    bool rotateLeft;
-    bool rotateRight;
+    public bool rotateLeft;
+    public bool rotateRight;
+    public float rotateSpeed;
+    float horizontalInputValue;
 
-    //ROTATE THE PLAYERTRANSFORM LEFT OR ROGHT WHEN DRIVING TO STEER.... ONE CLICK OF THE STICK MOVES IT 45d ON IT'S RESPECTIVE SIDE
+    Vector3 moveDirection;
 
     [Space]
     public VehicleMovement theVehicleMovement;
@@ -47,10 +62,6 @@ public class VehicleControl : MonoBehaviour
     [HideInInspector] public Vector3 movementInput;
 
 
-    // ADD ENUMS FOR STATE MACHINE.... THEN ADD THE SPEED FOR EACH STATE: ACC< REV< COMBAT< STATIONARY
-
-
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,13 +70,11 @@ public class VehicleControl : MonoBehaviour
 
     void Update()
     {
-        hasDriveInput = isAccelarating || isReversing;
-
-        // check if the vehicle is moving BY LOOKING AT THE VELOCITY CHANGE
-        //isMoving = (rb.linearVelocity.magnitude > 0.01f);
+        isMoving = (isAccelarating || isReversing) || ((movementInput.magnitude > 0.01f) && combatModeActivated); //write what this means
 
         StateMachine();
         SpeedControl();
+        Steering();
     }
 
 
@@ -89,6 +98,15 @@ public class VehicleControl : MonoBehaviour
         {
             Vector3 backwardVelocity = -transform.forward * speed;
             rb.linearVelocity = new Vector3(backwardVelocity.x,rb.linearVelocity.y, backwardVelocity.z);
+
+        }
+
+
+        // COMBAT MOVEMENT
+        if (theVehicleMovement == VehicleMovement.combatMovement) //
+        {
+            Vector3 localMovement = transform.forward * movementInput.z + transform.right * movementInput.x;
+            rb.linearVelocity = localMovement * speed + Vector3.up * rb.linearVelocity.y;
 
         }
 
@@ -132,7 +150,33 @@ public class VehicleControl : MonoBehaviour
 
     void Steering()
     {
+        // ==== REGULAR STERRING ROTATION ====
+        if (theVehicleMovement == VehicleMovement.accelerate || theVehicleMovement == VehicleMovement.revving)
+        {
+            rotateLeft = horizontalInputValue < -0.1f; // STICK MOVING LEFT
+            rotateRight = horizontalInputValue > 0.1f; // STICK MOVING RIGHT
+        }
 
+        // Invert the rotation when reversing
+        else if (theVehicleMovement == VehicleMovement.reverse)
+        {
+            rotateLeft = horizontalInputValue > 0.1f; // STICK MOVING RIGHT
+            rotateRight = horizontalInputValue < -0.1f; // STICK MOVING LEFT
+        }
+
+
+        // ==== ROTATE THE VEHICLE ACCORDING THE THE STICK DIRECTION ====
+        if (rotateLeft)
+            transform.Rotate(0, -rotateSpeed, 0, Space.World);
+        else if (rotateRight) // same for the right
+            transform.Rotate(0, rotateSpeed, 0, Space.World);
+
+
+        // ==== DISABLE ROTATIONS IF VEHICLE IS IDLE ====
+        if (theVehicleMovement == VehicleMovement.idle || theVehicleMovement == VehicleMovement.combatIdle)
+        {
+            rotateLeft = rotateRight = false;
+        }
     }
 
     #endregion
@@ -142,10 +186,10 @@ public class VehicleControl : MonoBehaviour
 
     void StateMachine()
     {
-        // COMBAT MODE
+        // ==== COMBAT MODE ====
         if (combatModeActivated)
         {
-            if (isAccelarating || isReversing)
+            if (isMoving)
                 theVehicleMovement = VehicleMovement.combatMovement;
             else
                 theVehicleMovement = VehicleMovement.combatIdle;
@@ -153,7 +197,7 @@ public class VehicleControl : MonoBehaviour
             return;
         }
 
-        // NORMAL MODE
+        // ==== NORMAL MODE ====
         if (isAccelarating && isReversing)
             theVehicleMovement = VehicleMovement.revving;
         else if (isAccelarating)
@@ -215,33 +259,22 @@ public class VehicleControl : MonoBehaviour
     {
         if (context.started || context.performed) //When the left stick is moved
         {
-            //movementInput = context.ReadValue<Vector2>(); //Get the values of the left stick
-            //isMoving = true;
-
             if (combatModeActivated)
             {
-
+                Vector2 stickInput = context.ReadValue<Vector2>();
+                movementInput = new Vector3(stickInput.x, 0f, stickInput.y);
             }
 
             else //STEERING during NORMAL MOVEMENT 
             {
                 movementInput = context.ReadValue<Vector2>();
-                float horizontalInputValue = movementInput.x;
-
-                if (horizontalInputValue < -0.1f)
-                {
-                    rotateLeft = horizontalInputValue < -0.1f; // STICK MOVING LEFT
-                }
-                else if (horizontalInputValue > 0.1f)
-                {
-                    rotateRight = horizontalInputValue > 0.1f; // STICK MOVING RIGHT
-                }
+                horizontalInputValue = movementInput.x; //equate the value to the VALUE OF THE LEFT STICK'S HORIZONTAL MOVEMENT (LEFT OR RIGHT)
             }
         }
-        else if (context.canceled) //Reset when stick is released
+        else if (context.canceled) //Reset values when stick is released
         {
-            movementInput = Vector2.zero; // Reset input to avoid lingering direction
-            //isMoving = false;
+            movementInput = Vector2.zero; 
+            horizontalInputValue = 0; 
         }
     }
 
