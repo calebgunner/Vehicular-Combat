@@ -2,11 +2,21 @@ using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.LightTransport;
+using UnityEngine.Rendering;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using static UnityEngine.UI.ScrollRect;
 
 public class CameraControl : MonoBehaviour
 {
+    // FIRST, FIX AND ORGANISE BOTH SCRIPTSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+
+
+    // ADDDDDDDDDDDDD CAMERA MOVE TO DEFAULT POSITION WHEN TIME HAS PASSED WITH NO INPUT
+    // ADD THIS
+    // MAKE CAM BE LINKED TO PLAYER WHEN REVVING SO THA IT MOVES WITH PLAYER
+
     private VehicleControl vC;
 
     [Header("CANERA CONTROL")]
@@ -16,9 +26,9 @@ public class CameraControl : MonoBehaviour
     Transform mainCamera;
 
     float cameraDistance;
-    public float cameaDistance_Stationary = 10;
-    public float cameaDistance_Driving = 13;
-    public float cameaDistance_Combat = 7;
+    public float cameraDistance_Stationary;
+    public float cameraDistance_Driving;
+    public float cameraDistance_Combat;
 
     [Space]
     public float sensitivity = 120f;  // Look sensitivity
@@ -31,6 +41,21 @@ public class CameraControl : MonoBehaviour
     float yRotation;                             // Horizontal rotation
 
     Rigidbody playerRb;
+
+    [Space]
+    public Transform gunTransform;
+    public Transform theOffset;
+
+    [Space]
+    public Vector3 defaultPosition;
+    public Vector3 defaultRotation;
+    public Vector3 defaultCameraPosition;
+    public Transform deafaltCamPosition_Transform;
+
+    [Space] //time with NO INPUT
+    public float timePassed;
+    public float interval = 3.5f;
+    public bool rotationInput;
 
 
     public enum OperatingCamera
@@ -50,7 +75,9 @@ public class CameraControl : MonoBehaviour
         playerRb = vC.GetComponent<Rigidbody>();
         mainCamera = Camera.main.transform;
 
-        cameraDistance = cameaDistance_Stationary;
+        cameraDistance = cameraDistance_Stationary;
+
+        
     }
 
 
@@ -63,6 +90,41 @@ public class CameraControl : MonoBehaviour
     private void LateUpdate()
     {
         CameraSetting();
+
+        // TIME PASSED WITH NO INPUT
+        if (!rotationInput && vC.isMoving)
+        {
+            timePassed += Time.deltaTime; // accumalate time since last frame
+
+            if (timePassed >= interval)
+            {
+                // The code here will execute every 2 seconds
+                Debug.Log("RESET THE CAMERA");
+
+                // Use standard = 0 if you want a hard reset after the action, 
+                // or -= interval to keep it looping every 2 seconds.
+                timePassed = 0;
+
+                // Add your camera reset code here
+                //ResetCamera();
+            }
+        }
+        else
+        {
+            // If there IS rotation input, keep the timer at zero
+            timePassed = 0;
+        }
+
+        // ========== THE DEFAULT CAMERA POSITION ==========
+        defaultPosition = new Vector3(0, 3.078181f, -8.457233f);
+        defaultRotation = new Vector3(10.57f, 0, 0);
+
+        // Cam position relative to car
+        // This converts 'defaultPosition' from a local offset into a world position based on where the car is and which way it's facing.
+        deafaltCamPosition_Transform.position = vC.transform.TransformPoint(defaultPosition);
+
+        Quaternion targetation = Quaternion.Euler(defaultRotation); //rotation relative to car
+        deafaltCamPosition_Transform.rotation = vC.transform.rotation * targetation;
     }
 
     // ====== CAMERA CONTROL ======
@@ -101,15 +163,15 @@ public class CameraControl : MonoBehaviour
 
             // Set the camera distance
             if (theOperatingCamera == OperatingCamera.stationaryCamera)
-                cameraDistance = Mathf.Lerp(cameraDistance, cameaDistance_Stationary, easingSpeed * Time.deltaTime);
+                cameraDistance = Mathf.Lerp(cameraDistance, cameraDistance_Stationary, easingSpeed * Time.deltaTime);
             else if (theOperatingCamera == OperatingCamera.drivingCamera)
-                cameraDistance = Mathf.Lerp(cameraDistance, cameaDistance_Driving, easingSpeed * Time.deltaTime);
+                cameraDistance = Mathf.Lerp(cameraDistance, cameraDistance_Driving, easingSpeed * Time.deltaTime);
 
         }
     }
 
-    // ADD REVVING CONTROL
-    // PLAY ARKHAM BATMAN AND DOCUMENT CONTROL SCHEME
+    
+
     void Non_CombatCamera()
     {
         // Read look input and update rotation values
@@ -127,7 +189,7 @@ public class CameraControl : MonoBehaviour
 
         // Follow the player smoothly
         transform.position = playerRb.transform.position + offset;
-        transform.LookAt(playerRb.transform.position);
+        transform.LookAt(theOffset.position);
     }
 
 
@@ -135,6 +197,15 @@ public class CameraControl : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        lookInput = context.ReadValue<Vector2>();
+        if (context.started || context.performed)
+        {
+            lookInput = context.ReadValue<Vector2>();
+            rotationInput = true;
+        }
+        else if (context.canceled)
+        {
+            rotationInput = false;
+            lookInput = Vector2.zero;
+        }
     }
 }

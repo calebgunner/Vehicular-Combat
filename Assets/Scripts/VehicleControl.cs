@@ -43,6 +43,10 @@ public class VehicleControl : MonoBehaviour
     Vector3 moveDirection;
 
     [Space]
+    [Space]
+    public GameObject GunObject;
+
+    [Space]
     public VehicleMovement theVehicleMovement;
 
     public enum VehicleMovement
@@ -75,6 +79,10 @@ public class VehicleControl : MonoBehaviour
         StateMachine();
         SpeedControl();
         Steering();
+
+        // Activate the Gun IF COMBAT MODE IS ACTIVATED
+        GunObject.SetActive(combatModeActivated);
+
     }
 
 
