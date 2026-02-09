@@ -9,40 +9,39 @@ using static UnityEngine.UI.ScrollRect;
 
 public class CameraControl : MonoBehaviour
 {
-    // FIRST, FIX AND ORGANISE BOTH SCRIPTSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-
-
-
+    //CAR NOT ROTATING WHEN IT ROTATE IT... IT DOES BUT THE TRANSFORM IT SELF IN UNITY DOES NOT... WHY? FIX IT!!!
     // ADDDDDDDDDDDDD CAMERA MOVE TO DEFAULT POSITION WHEN TIME HAS PASSED WITH NO INPUT
     // ADD THIS
     // MAKE CAM BE LINKED TO PLAYER WHEN REVVING SO THA IT MOVES WITH PLAYER
+    // AND COMBAT CAMERA
 
-    private VehicleControl vC;
+    #region inspector values:
 
-    [Header("CANERA CONTROL")]
-    public OperatingCamera theOperatingCamera;
-
-    [Header("CAMERA SETTINGS")]
+    VehicleControl vC;
     Transform mainCamera;
 
-    float cameraDistance;
+    [Header("camera control")]
+    public OperatingCamera theOperatingCamera;
+
+    [Header("camera settings")]
     public float cameraDistance_Stationary;
     public float cameraDistance_Driving;
     public float cameraDistance_Combat;
+    float cameraDistance;
 
     [Space]
-    public float sensitivity = 120f;  // Look sensitivity
-    public float minY = -40f;          // Min vertical angle
-    public float maxY = 70f;           // Max vertical angle
+    public float sensitivity = 120f;    // Look sensitivity
+    public float minY = -40f;           // Min vertical angle
+    public float maxY = 70f;            // Max vertical angle
     float easingSpeed = 3f;
 
-    Vector2 lookInput;                           // Stored look input
-    float xRotation;                             // Vertical rotation
-    float yRotation;                             // Horizontal rotation
+    Vector2 lookInput;                  // Stored look input
+    float xRotation;                    // Vertical rotation
+    float yRotation;                    // Horizontal rotation
 
     Rigidbody playerRb;
 
-    [Space]
+    [Header("positions and offsets")]
     public Transform gunTransform;
     public Transform theOffset;
 
@@ -52,7 +51,7 @@ public class CameraControl : MonoBehaviour
     public Vector3 defaultCameraPosition;
     public Transform deafaltCamPosition_Transform;
 
-    [Space] //time with NO INPUT
+    [Header("rotation insults")]
     public float timePassed;
     public float interval = 3.5f;
     public bool rotationInput;
@@ -65,12 +64,16 @@ public class CameraControl : MonoBehaviour
         combatCamera
     }
 
+    #endregion
+
 
     void Awake()
     {
+        // ====== CURSOR SETTINGS =======
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        // ====== START VALUES =======
         vC = FindFirstObjectByType<VehicleControl>();
         playerRb = vC.GetComponent<Rigidbody>();
         mainCamera = Camera.main.transform;
@@ -91,7 +94,7 @@ public class CameraControl : MonoBehaviour
     {
         CameraSetting();
 
-        // TIME PASSED WITH NO INPUT
+        // ========== TIME PASSED WITH NO INPUT ==========
         if (!rotationInput && vC.isMoving)
         {
             timePassed += Time.deltaTime; // accumalate time since last frame
@@ -102,11 +105,10 @@ public class CameraControl : MonoBehaviour
                 Debug.Log("RESET THE CAMERA");
 
                 // Use standard = 0 if you want a hard reset after the action, 
-                // or -= interval to keep it looping every 2 seconds.
                 timePassed = 0;
 
                 // Add your camera reset code here
-                //ResetCamera();
+                ResetCamera();
             }
         }
         else
@@ -116,15 +118,15 @@ public class CameraControl : MonoBehaviour
         }
 
         // ========== THE DEFAULT CAMERA POSITION ==========
-        defaultPosition = new Vector3(0, 3.078181f, -8.457233f);
-        defaultRotation = new Vector3(10.57f, 0, 0);
 
-        // Cam position relative to car
-        // This converts 'defaultPosition' from a local offset into a world position based on where the car is and which way it's facing.
-        deafaltCamPosition_Transform.position = vC.transform.TransformPoint(defaultPosition);
+        //Cam position relative to car
+        //defaultCameraPosition = vC.transform.position - vC.transform.
+        //Vector3 defaultPosition_FromCamera = new Vector3(0, 3.078181f, -8.457233f);
+        //deafaltCamPosition_Transform.position = vC.transform.position + defaultPosition_FromCamera;
 
-        Quaternion targetation = Quaternion.Euler(defaultRotation); //rotation relative to car
-        deafaltCamPosition_Transform.rotation = vC.transform.rotation * targetation;
+
+        //Quaternion targetRotation = Quaternion.Euler(defaultRotation); //rotation relative to car
+        //deafaltCamPosition_Transform.rotation = vC.transform.rotation * targetRotation;
     }
 
     // ====== CAMERA CONTROL ======
@@ -171,7 +173,6 @@ public class CameraControl : MonoBehaviour
     }
 
     
-
     void Non_CombatCamera()
     {
         // Read look input and update rotation values
@@ -193,7 +194,12 @@ public class CameraControl : MonoBehaviour
     }
 
 
+    void ResetCamera()
+    {
 
+    }
+
+    #region PLAYER INPUTS (CAMERA CONTROLS):
 
     public void OnLook(InputAction.CallbackContext context)
     {
@@ -208,4 +214,6 @@ public class CameraControl : MonoBehaviour
             lookInput = Vector2.zero;
         }
     }
+
+    #endregion
 }

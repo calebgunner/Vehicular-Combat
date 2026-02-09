@@ -4,18 +4,7 @@ using UnityEngine.InputSystem;
 
 public class VehicleControl : MonoBehaviour
 {
-    // TIDY UP THE CODE FIRST
-    // WORK ON THE CAMERA SYSTEM
-
-
-
-
-
-
-
-
-
-
+    #region INSPECTOR VALUES:
 
     [Header("activated mode")]
     public bool combatModeActivated;
@@ -23,18 +12,18 @@ public class VehicleControl : MonoBehaviour
     public bool isAccelarating;
     public bool isReversing;
 
-    [Space]
-    float speed;
+    [Header("movement speed")]
     public float stationarySpeed;
     public float reversingSpeed;
     public float accelaratingSpeed;
     public float combatSpeed;
+    float speed;
 
     [Space]
     bool hasDriveInput;
     Vector3 moveVelocity;
 
-    [Space]
+    [Header("vehicle rotation")]
     public bool rotateLeft;
     public bool rotateRight;
     public float rotateSpeed;
@@ -42,7 +31,6 @@ public class VehicleControl : MonoBehaviour
 
     Vector3 moveDirection;
 
-    [Space]
     [Space]
     public GameObject GunObject;
 
@@ -64,6 +52,8 @@ public class VehicleControl : MonoBehaviour
 
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
+
+    #endregion
 
 
     void Start()
