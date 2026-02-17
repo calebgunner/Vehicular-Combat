@@ -2,6 +2,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+ public enum VehicleMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
+{
+    // ==== NORMAL MOVEMENT ====
+    idle,
+    accelerate,
+    reverse,
+    revving,
+
+    // ==== COMBAT MOVEMENT ====
+    combatIdle,
+    combatMovement
+}
+
 public class VehicleControl : MonoBehaviour
 {
     #region INSPECTOR VALUES:
@@ -36,19 +49,6 @@ public class VehicleControl : MonoBehaviour
 
     [Space]
     public VehicleMovement theVehicleMovement;
-
-    public enum VehicleMovement
-    {
-        // ==== NORMAL MOVEMENT ====
-        idle,
-        accelerate,
-        reverse,
-        revving,
-
-        // ==== COMBAT MOVEMENT ====
-        combatIdle,
-        combatMovement
-    }
 
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;

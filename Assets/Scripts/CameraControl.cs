@@ -7,8 +7,22 @@ using UnityEngine.Rendering;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using static UnityEngine.UI.ScrollRect;
 
+
+public enum OperatingCamera //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
+{
+    stationaryCamera,
+    drivingCamera,
+    combatCamera
+}
+
+
 public class CameraControl : MonoBehaviour
 {
+    // COMBAT CAM... LET GUN ROTATE WITH CAM
+    // MAKE THE SHOOTING SYSTEM (SHOOT) MACHINE-GUN
+
+
+
     //CAR NOT ROTATING WHEN IT ROTATE IT... IT DOES BUT THE TRANSFORM IT SELF IN UNITY DOES NOT... WHY? FIX IT!!!
     // ADDDDDDDDDDDDD CAMERA MOVE TO DEFAULT POSITION WHEN TIME HAS PASSED WITH NO INPUT
     // ADD THIS
@@ -34,6 +48,7 @@ public class CameraControl : MonoBehaviour
     public float minY = -40f;           // Min vertical angle
     public float maxY = 70f;            // Max vertical angle
     float easingSpeed = 3f;
+    float combatEasingSpeed = 10f;
 
     Vector2 lookInput;                  // Stored look input
     float xRotation;                    // Vertical rotation
@@ -44,6 +59,10 @@ public class CameraControl : MonoBehaviour
     [Header("positions and offsets")]
     public Transform gunTransform;
     public Transform theOffset;
+    [Space]
+    float OffsetHeight;
+    public float OffsetHeight_Combat = 2.5f;
+    public float OffsetHeight_NonCombat = 1.5f;
 
     [Space]
     public Vector3 defaultPosition;
@@ -56,19 +75,15 @@ public class CameraControl : MonoBehaviour
     public float interval = 3.5f;
     public bool rotationInput;
 
-
-    public enum OperatingCamera
-    {
-        stationaryCamera,
-        drivingCamera,
-        combatCamera
-    }
-
     #endregion
 
 
     void Awake()
     {
+        // ====== DEFAULT OFSSET Y-VALUE PLACEMENT ======
+        OffsetHeight = OffsetHeight_NonCombat;
+        theOffset.localPosition = new Vector3(theOffset.localPosition.x, OffsetHeight, theOffset.localPosition.z);
+
         // ====== CURSOR SETTINGS =======
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -86,7 +101,7 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
-        CameraInUse();
+        CamStateMachine();
     }
 
 
@@ -129,26 +144,6 @@ public class CameraControl : MonoBehaviour
         //deafaltCamPosition_Transform.rotation = vC.transform.rotation * targetRotation;
     }
 
-    // ====== CAMERA CONTROL ======
-    void CameraInUse()
-    {
-        if (vC.isMoving)
-        {
-            if (vC.combatModeActivated)
-                theOperatingCamera = OperatingCamera.combatCamera;
-
-            else if (vC.isAccelarating && vC.isReversing) //revving the engine
-                theOperatingCamera = OperatingCamera.stationaryCamera;
-
-            else
-                theOperatingCamera = OperatingCamera.drivingCamera;
-        }
-        else
-        {
-            theOperatingCamera = OperatingCamera.stationaryCamera;
-        }
-    }
-
 
     void CameraSetting()
     {
@@ -156,7 +151,10 @@ public class CameraControl : MonoBehaviour
 
         if (theOperatingCamera == OperatingCamera.combatCamera) //combat camera settings
         {
+            CombatCamera();
 
+            if (theOperatingCamera == OperatingCamera.combatCamera)
+                cameraDistance = Mathf.Lerp(cameraDistance, cameraDistance_Combat, combatEasingSpeed * Time.deltaTime);
         }
 
         else //driving camera and stationary camera settings
@@ -170,6 +168,33 @@ public class CameraControl : MonoBehaviour
                 cameraDistance = Mathf.Lerp(cameraDistance, cameraDistance_Driving, easingSpeed * Time.deltaTime);
 
         }
+
+        // THE CAMERA OFFSET Y-POSITION: this affects where the camera faces (AFTER CHANGES HAVE ALREADY BEEN MADE)
+        theOffset.localPosition = new Vector3(theOffset.localPosition.x, OffsetHeight, theOffset.localPosition.z);
+    }
+
+
+    void CombatCamera()
+    {
+        // Read look input and update rotation values
+        yRotation += lookInput.x * sensitivity * Time.deltaTime;
+        xRotation -= lookInput.y * sensitivity * Time.deltaTime;
+
+        // Clamp vertical rotation so the camera cannot flip
+        xRotation = Mathf.Clamp(xRotation, minY, maxY);
+
+        // Build rotation from current x and y values
+        Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        // Calculate offset behind the player
+        Vector3 offset = rotation * Vector3.back * cameraDistance;
+
+        // Follow the player smoothly
+        transform.position = playerRb.transform.position + offset;
+        transform.LookAt(theOffset.position);
+
+        // Ease the Y-OFFSET height change
+        OffsetHeight = Mathf.Lerp(OffsetHeight, OffsetHeight_Combat, combatEasingSpeed * Time.deltaTime);
     }
 
     
@@ -191,6 +216,10 @@ public class CameraControl : MonoBehaviour
         // Follow the player smoothly
         transform.position = playerRb.transform.position + offset;
         transform.LookAt(theOffset.position);
+
+        // Ease the Y-OFFSET height change
+        OffsetHeight = Mathf.Lerp(OffsetHeight, OffsetHeight_NonCombat, easingSpeed * Time.deltaTime);
+
     }
 
 
@@ -198,6 +227,25 @@ public class CameraControl : MonoBehaviour
     {
 
     }
+
+
+    #region STATE MACHINE (CAMERA):
+
+    void CamStateMachine()
+    {
+        // ====== combat camera ======
+        if (vC.theVehicleMovement == VehicleMovement.combatMovement || vC.theVehicleMovement == VehicleMovement.combatIdle)
+            theOperatingCamera = OperatingCamera.combatCamera;
+
+        else if (vC.theVehicleMovement == VehicleMovement.accelerate || vC.theVehicleMovement == VehicleMovement.reverse)
+            theOperatingCamera = OperatingCamera.drivingCamera;
+
+        else if (vC.theVehicleMovement == VehicleMovement.idle || vC.theVehicleMovement == VehicleMovement.revving) //controls the same as the driving camera
+            theOperatingCamera = OperatingCamera.stationaryCamera;
+    }
+
+    #endregion
+
 
     #region PLAYER INPUTS (CAMERA CONTROLS):
 
