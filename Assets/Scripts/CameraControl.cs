@@ -18,12 +18,15 @@ public enum OperatingCamera //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EA
 
 public class CameraControl : MonoBehaviour
 {
-    // COMBAT CAM... LET GUN ROTATE WITH CAM
-    // MAKE THE SHOOTING SYSTEM (SHOOT) MACHINE-GUN
+    // COMBAT CAM... LET GUN ROTATE WITH CAM ===========================> DONE
+    // MAKE THE SHOOTING SYSTEM (SHOOT) MACHINE-GUN ====================> DONE
 
 
 
-    //CAR NOT ROTATING WHEN IT ROTATE IT... IT DOES BUT THE TRANSFORM IT SELF IN UNITY DOES NOT... WHY? FIX IT!!!
+    ///WHEN IN COMBAT MODE:
+    ///IF MOVING, CAR FOLLOWS CAMERA FORWARD
+    ///IF STATIONARY, ONLY THE GUN FOLLOWS CAM FORWARD
+
     // ADDDDDDDDDDDDD CAMERA MOVE TO DEFAULT POSITION WHEN TIME HAS PASSED WITH NO INPUT
     // ADD THIS
     // MAKE CAM BE LINKED TO PLAYER WHEN REVVING SO THA IT MOVES WITH PLAYER
@@ -108,6 +111,7 @@ public class CameraControl : MonoBehaviour
     private void LateUpdate()
     {
         CameraSetting();
+        GunFollowCameraDirection();
 
         // ========== TIME PASSED WITH NO INPUT ==========
         if (!rotationInput && vC.isMoving)
@@ -142,6 +146,21 @@ public class CameraControl : MonoBehaviour
 
         //Quaternion targetRotation = Quaternion.Euler(defaultRotation); //rotation relative to car
         //deafaltCamPosition_Transform.rotation = vC.transform.rotation * targetRotation;
+    }
+
+
+    void GunFollowCameraDirection()
+    {
+        // Change the Y-DIRECTION so that it will only follow the Camera's Y-DIRECTION (Rotating from left-to-right)
+
+        // Get the CAMERA's Y-angle
+        float cameraYAngle = Camera.main.transform.eulerAngles.y;
+
+        // Create a new rotation with the target's Y angle and keep the current X and Z angles
+        Vector3 newYRotation = new Vector3(0, cameraYAngle, 0);
+
+        // Apply the new rotation using Quaternion.Euler
+        vC.GunObject.transform.rotation = Quaternion.Euler(newYRotation);
     }
 
 

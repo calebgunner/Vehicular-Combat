@@ -1,6 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static UnityEngine.UI.ScrollRect;
 
  public enum VehicleMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
 {
@@ -53,6 +55,22 @@ public class VehicleControl : MonoBehaviour
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
 
+    [Header("shooting mechanics")]
+    public Transform spawnPoint;
+    public Rigidbody projectile;
+    public float bulletSpeed;
+    public bool isOnTarget;
+    public bool isHoldingShoot;
+
+    [Space]
+    public bool isShooting1;
+    float shootCooldown1; // Cooldown time between attacks
+    bool canShoot1 = true;
+
+    [Space]
+    public LayerMask enemyLayer;
+    public LayerMask otherLayer;
+
     #endregion
 
 
@@ -64,11 +82,15 @@ public class VehicleControl : MonoBehaviour
 
     void Update()
     {
+        //
+        //if (isOnTarget) ShootingMechanics();
+
         isMoving = (isAccelarating || isReversing) || ((movementInput.magnitude > 0.01f) && combatModeActivated); //write what this means
 
         StateMachine();
         SpeedControl();
         Steering();
+        CheckForTarget();
 
         // Activate the Gun IF COMBAT MODE IS ACTIVATED
         GunObject.SetActive(combatModeActivated);
@@ -180,6 +202,121 @@ public class VehicleControl : MonoBehaviour
     #endregion
 
 
+    #region COMBAT MECHANICS:
+
+    void CheckForTarget()
+    {
+        if (combatModeActivated) // this only works when player is in combat mode
+        {
+            // Ray from the SpawnPoint to the Center of the screen
+            Ray ray = new Ray(spawnPoint.position, spawnPoint.forward);
+            RaycastHit hit;
+
+            float rayLength = 1000f;
+
+            if (Physics.Raycast(ray, out hit, rayLength, enemyLayer))
+            {
+                isOnTarget = true;
+
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, UnityEngine.Color.green);
+            }
+
+            else if (Physics.Raycast(ray, out hit, rayLength, otherLayer))
+            {
+                isOnTarget = false;
+
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, UnityEngine.Color.red);
+            }
+
+            else
+            {
+                isOnTarget = false;
+
+                Debug.DrawRay(ray.origin, ray.direction * rayLength, UnityEngine.Color.white);
+            }
+        }
+    }
+
+
+    void ShootingMechanics()
+    {
+        #region BULLET RELEASED:
+
+        // Instantiate the projectile at the position and rotation of this transform
+        Rigidbody clone;
+        clone = Instantiate(projectile, spawnPoint.position, spawnPoint.rotation);
+
+        #endregion
+
+        #region AIMING / DIRECTION:
+
+        // Calculate the direction from spawnPoint to the center of the screen
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            // This block runs if the ray hits something
+            targetPoint = hit.point;
+        }
+        else
+        {
+            // This block runs if the ray does NOT hit anything
+            targetPoint = ray.GetPoint(1000f);
+
+            //MAKE AN INVISIBLE BORDER SO THAT THE RAY TECHNICALLY IS ALWAYS HITTING AN OBJECT THAT THE AIM ALWAYS WORKS
+        }
+
+        // Calculate direction
+        Vector3 direction = (targetPoint - spawnPoint.position).normalized;
+
+        #endregion
+
+        #region BULLET VELOCITY / COLLISION:
+
+        // Apply velocity to the projectile
+        clone.linearVelocity = direction * bulletSpeed;
+
+        //Ignore Collision Between Player and Projectile [TO PREVENT THE UNCONTROLLED RECOIL]
+        Physics.IgnoreCollision(clone.GetComponent<Collider>(), rb.GetComponent<Collider>());
+
+        #endregion
+
+    }
+
+
+    IEnumerator ShootingControl()
+    {
+        while (isHoldingShoot && canShoot1)
+        {
+            isShooting1 = true;
+            canShoot1 = false;
+
+            ShootingMechanics(); // Apply the shooting mechanics
+
+            // Return to shoot-idle or appropriate state
+            //theMovementType = MovementType.Normal_Shot;
+            //movementText.text = "Movement : normal-shot";
+
+            //Turn off effects
+            //NormalShot_Particle.SetActive(true);
+
+            // Wait for shoot animation or duration
+            yield return new WaitForSeconds(0.17f);
+
+            isShooting1 = false;
+
+            //NormalShot_Particle.SetActive(false);
+
+            // Wait for cooldown
+            yield return new WaitForSeconds(0.1f); //ZERO SINCE THE "SHOOTING ANIMATION" IS A LONG ENOUGH WAIT
+            canShoot1 = true;
+        }
+    }
+
+    #endregion
+
+
     #region STATE MACHINE:
 
     void StateMachine()
@@ -229,12 +366,22 @@ public class VehicleControl : MonoBehaviour
 
     public void OnAccelerate(InputAction.CallbackContext context)
     {
-        if (context.performed && !combatModeActivated)
+        if (context.performed)
         {
-            isAccelarating = true;
+            if (combatModeActivated)
+            {
+                isHoldingShoot = true;
+                StartCoroutine(ShootingControl());
+            }
+            else
+            {
+                isAccelarating = true;
+            }
         }
-        else
+
+        if (context.canceled)
         {
+            isHoldingShoot = false;
             isAccelarating = false;
         }
     }

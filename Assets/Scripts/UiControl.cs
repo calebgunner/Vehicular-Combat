@@ -3,13 +3,19 @@ using UnityEngine;
 
 public class UiControl : MonoBehaviour
 {
-    GameObject ReticleImage;
+    // for now the ammo does not decrease.. try this out before adding ammo as players will be continously dodging enemy attacks
 
-    public CameraControl cc;
+    [Header("ui images")]
+    GameObject Reticle_OnTarget;
+    GameObject Reticle_OffTarget;
+
+    [Header("other scripts")]
+    public VehicleControl vC;
 
     void Start()
     {
-        ReticleImage = GameObject.Find("Reticle");
+        Reticle_OnTarget = GameObject.Find("Reticle (On Target)");
+        Reticle_OffTarget = GameObject.Find("Reticle (Off Target)");
     }
 
 
@@ -22,7 +28,9 @@ public class UiControl : MonoBehaviour
     // UI SPRITE CONTROL
     void UiSpriteControl()
     {
-        //The Reticle Appears when the combat mode is activated
-        ReticleImage.SetActive(cc.theOperatingCamera == OperatingCamera.combatCamera);
+        //The Reticle (On Target) Appears when the combat mode is activated and aim is On Target
+        Reticle_OnTarget.SetActive(vC.combatModeActivated && vC.isOnTarget);
+
+        Reticle_OffTarget.SetActive(vC.combatModeActivated && !vC.isOnTarget);
     }
 }
