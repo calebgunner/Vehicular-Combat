@@ -34,16 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Accelarate",
-                    "type": "Button",
-                    "id": "f68bfb56-011a-42a5-916b-1843cacee59e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Reverse",
+                    "name": "Dodge",
                     "type": "Button",
                     "id": "dc4482c6-000d-4ed9-be6d-a317eac49690",
                     "expectedControlType": "",
@@ -88,23 +79,12 @@
                 },
                 {
                     "name": "",
-                    "id": "426adb69-98e8-4676-8ba1-90c1cd7cb1ee",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Accelarate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "284a8577-c040-4f92-b886-d75fb2dfa058",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Reverse",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

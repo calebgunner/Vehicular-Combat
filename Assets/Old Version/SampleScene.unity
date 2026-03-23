@@ -1005,7 +1005,7 @@ MonoBehaviour:
   movementInput: {x: 0, y: 0, z: 0}
   spawnPoint: {fileID: 1507129200}
   projectile: {fileID: 949687570003348389, guid: 08790b7f73efe8241aec40b001a505c1, type: 3}
-  bulletSpeed: 250
+  bulletSpeed: 700
   isOnTarget: 0
   isHoldingShoot: 0
   isShooting1: 0
