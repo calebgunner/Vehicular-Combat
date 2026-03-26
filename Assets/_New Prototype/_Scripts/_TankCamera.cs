@@ -3,44 +3,29 @@ using UnityEngine.InputSystem;
 
 public class _TankCamera : MonoBehaviour
 {
-    /// <summary>
-    /// /////////////////////// JUST FOCUS ON FIXING/REVAMPING CAMERA SYSTEM TODAY !!!
-    /// </summary>
+    /// THE "THIRD PERSON AIM CAMERA" IS LINKED TO THE "CAMERA-TARGET" ROTATION HENCE WHY THAT IS WHAT WE ARE ROTATING IT
+    
     
     #region inspector values:
 
     _TankControl tC;
-    Transform mainCamera;
+    Rigidbody playerRb;     // Rigidbody of the player (used if needed for future logic)
 
     [Header("camera settings")]
-    public float cameraDistance;
-
-    [Space]
-    public float sensitivity = 120f;    // Look sensitivity
+    public float sensitivity = 60f;     // Look sensitivity
     public float minY = -40f;           // Min vertical angle
     public float maxY = 70f;            // Max vertical angle
-    float combatEasingSpeed = 10f;
 
-    Vector2 lookInput;                  // Stored look input
-    float xRotation;                    // Vertical rotation
-    float yRotation;                    // Horizontal rotation
+    Vector2 lookInput;                  // Stores input from controller (right stick)
+    float xRotation;                    // Vertical rotation  (up/down)
+    float yRotation;                    // Horizontal rotation (left/right)
 
-    Rigidbody playerRb;
-
-    [Header("positions and offsets")]
+    [Header("references")]
     public Transform gunTransform;
-    public Transform theOffset;
+    public Transform cameraTarget;      //(Empty Child Object on Player) Target that Cinemachine follows and rotates around
 
     [Space]
-    public Vector3 defaultPosition;
-    public Vector3 defaultRotation;
-    public Vector3 defaultCameraPosition;
-    public Transform deafaltCamPosition_Transform;
-
-    [Header("rotation insults")]
-    public float timePassed;
-    public float interval = 3.5f;
-    public bool rotationInput;
+    public bool rotationInput;          // Used to check if player is actively giving rotation input
 
     #endregion
 
@@ -52,59 +37,88 @@ public class _TankCamera : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         // ====== START VALUES =======
-        tC = FindFirstObjectByType<_TankControl>();
+        tC = FindAnyObjectByType<_TankControl>();
         playerRb = tC.GetComponent<Rigidbody>();
-        mainCamera = Camera.main.transform;
 
-
+        // IMPORTANT:
+        // Initialise rotation values based on current cameraTarget rotation
+        // Prevents snapping when the game starts
+        Vector3 angles = cameraTarget.eulerAngles;
+        yRotation = angles.y;
+        xRotation = angles.x;
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
-        CombatCamera();
+        HandleCameraRotation(); //This is put in FIXED-UPDATE due to the movement also being in FIXED-UPDATE
+        HandleTankRotation();
     }
 
 
     private void LateUpdate()
     {
+        // Apply gun rotation AFTER camera has updated
+        // LateUpdate ensures smoother syncing
         GunFollowCameraDirection();
     }
 
 
-    void GunFollowCameraDirection()
+    // ==== GUN ROTATION ==== 
+    void GunFollowCameraDirection() //will eventually make the head follow the reticle in all directions
     {
-        // Change the Y-DIRECTION so that it will only follow the Camera's Y-DIRECTION (Rotating from left-to-right)
+        // Get ONLY the Y rotation from the camera target
+        float cameraYAngle = cameraTarget.eulerAngles.y;
 
-        // Get the CAMERA's Y-angle
-        float cameraYAngle = Camera.main.transform.eulerAngles.y;
-
-        // Create a new rotation with the target's Y angle and keep the current X and Z angles
-        Vector3 newYRotation = new Vector3(0, cameraYAngle, 0);
-
-        // Apply the new rotation using Quaternion.Euler
-        gunTransform.transform.rotation = Quaternion.Euler(newYRotation);
+        // Apply rotation to the gun
+        // Keeps gun aligned with camera direction (left/right only)
+        gunTransform.rotation = Quaternion.Euler(0f, cameraYAngle, 0f);
     }
 
 
-    void CombatCamera()
+    // ==== TANK ROTATION ==== 
+    void HandleTankRotation()
     {
-        // Read look input and update rotation values
-        yRotation += lookInput.x * sensitivity * Time.deltaTime;
-        xRotation -= lookInput.y * sensitivity * Time.deltaTime;
+        if (tC.theTankMovement == TankMovement.movement && rotationInput)
+        {
+            // Get ONLY the Y rotation from the camera target
+            float cameraYAngle = cameraTarget.eulerAngles.y;
 
-        // Clamp vertical rotation so the camera cannot flip
+            // Target rotation around Y
+            Quaternion targetRotation = Quaternion.Euler(0f, cameraYAngle, 0f);
+
+            // Smoothly rotate tank towards camera direction
+            tC.transform.rotation = Quaternion.Slerp(
+                tC.transform.rotation,      // current rotation
+                targetRotation,             // target rotation
+                8f * Time.fixedDeltaTime    // smoothing factor, tweak for speed
+            );
+        }
+    }
+
+
+    // ==== CAMERA ROTATION ==== 
+    void HandleCameraRotation()
+    {
+        // Create a local copy of input (so we can modify it safely)
+        Vector2 input = lookInput;
+
+        // DEADZONE:
+        // Prevents small stick drift from moving camera
+        if (input.magnitude < 0.1f)
+        {
+            input = Vector2.zero;
+        }
+
+        yRotation += input.x * sensitivity * Time.fixedDeltaTime;    // Update horizontal rotation (left/right)
+        xRotation -= input.y * sensitivity * Time.fixedDeltaTime;    // Update vertical rotation (up/down)
+
+        // Clamp vertical rotation so camera cannot flip
         xRotation = Mathf.Clamp(xRotation, minY, maxY);
 
-        // Build rotation from current x and y values
-        Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-
-        // Calculate offset behind the player
-        Vector3 offset = rotation * Vector3.back * cameraDistance;
-
-        // Follow the player smoothly
-        transform.position = playerRb.transform.position + offset;
-        transform.LookAt(theOffset.position);
+        // Apply rotation to camera target
+        // Cinemachine will follow this automatically
+        cameraTarget.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
     }
 
 

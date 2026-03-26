@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 
 public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
@@ -15,6 +16,10 @@ public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIE
 
 public class _TankControl : MonoBehaviour
 {
+    /// <summary>
+    ///  WORK ON THE SHOOTING MECHANIC NOW
+    /// </summary>
+
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
     
@@ -30,10 +35,14 @@ public class _TankControl : MonoBehaviour
     public float dodgeDuration;
     public float canDodgeDelay;
 
+    [Header("references")]
+    _TankCamera tC;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        tC = FindAnyObjectByType<_TankCamera>();
     }
 
 
@@ -65,9 +74,10 @@ public class _TankControl : MonoBehaviour
         // MOVEMENT
         if (theTankMovement == TankMovement.movement)
         {
-            Vector3 localMovement = transform.forward * movementInput.z + transform.right * movementInput.x; //GETTING THE FWD/BWD AND LEFT/RIGHT DIRECTION
-            rb.linearVelocity = localMovement * speed + Vector3.up * rb.linearVelocity.y; //MOVING THE OBJECT IN THAT DIRECTION ACCORDING TO THE SPEED... Y-VALUE remains the same and is not touched
+            Vector3 localMovement = (tC.cameraTarget.forward * movementInput.z + tC.cameraTarget.right * movementInput.x).normalized; //movement is relavent to the cameraTarget which controls movement direction
+            localMovement.y = 0f; //cancel out any irregular moveemnt in he Y-Drection
 
+            rb.linearVelocity = localMovement * speed + Vector3.up * rb.linearVelocity.y; // simple, instant
         }
 
         // NO MOVEMENT
@@ -84,8 +94,10 @@ public class _TankControl : MonoBehaviour
         canDodge = false; 
         isDodging = true;
 
-        Vector3 localMovement = transform.forward * movementInput.z + transform.right * movementInput.x; //GETTING DODGE DIRECTION
-        rb.AddForce(localMovement * dodgeForce, ForceMode.Impulse); //ADD A FORCE IN THE DODGE DIRECTION
+        Vector3 localMovement = (tC.cameraTarget.forward * movementInput.z + tC.cameraTarget.right * movementInput.x).normalized;
+        localMovement.y = 0f;
+
+        rb.AddForce(localMovement * dodgeForce, ForceMode.Impulse); // ADD FORCE IN THAT DIRECTION
 
         theTankMovement = TankMovement.dodging; //change the movement to 'dodging'
 
