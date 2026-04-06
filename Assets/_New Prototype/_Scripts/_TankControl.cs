@@ -17,7 +17,14 @@ public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIE
 public class _TankControl : MonoBehaviour
 {
     /// <summary>
-    ///  SHOOTING LAGS BEHIND WHEN PLAYER IS MOVING AND SHOOTING
+    ///  ADD SOME LITTLE AIM ASSIST
+    ///  ADD FEEDBACK 
+    ///     I.E. PARTICLES WHEN BULLET HITS, 
+    ///     ENEMY EXPLOSION WHEN DEAD, 
+    ///     PARTICLE EFECT FROM MUZZLE, 
+    ///     DODGING EFFECT, 
+    ///     SMALL CHANGE IN COLOUR WHEN ENEMY HIT
+    ///     
     /// </summary>
 
     [HideInInspector] public Rigidbody rb;
@@ -40,6 +47,7 @@ public class _TankControl : MonoBehaviour
     public GameObject trailPrefab;
     public bool isOnTarget;
     public bool isHoldingShoot;
+    public float bulletTrailDuration = 0.05f;
 
     [Space]
     public bool isShooting1;
@@ -245,7 +253,7 @@ public class _TankControl : MonoBehaviour
             if (hit.transform.CompareTag("Enemy"))
             {
                 // Apply damage here
-                // hit.transform.GetComponent<Enemy>().TakeDamage();
+                hit.transform.GetComponent<_Enemy>().EnemyTakesDamage();
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f);
@@ -261,22 +269,30 @@ public class _TankControl : MonoBehaviour
 
         #region SHOOTING TRAIL CODE:
 
-        GameObject trail = Instantiate(trailPrefab, spawnPoint.position, Quaternion.identity); //spawns the trail
-        StartCoroutine(MoveTrail(trail, targetPoint));
+        LineRenderer lr = Instantiate(trailPrefab).GetComponent<LineRenderer>(); //Gain access to the Line Render on the trailPrefab
+
+        lr.SetPosition(0, spawnPoint.position); //start point
+        lr.SetPosition(1, targetPoint); //end point
+
+        Destroy(lr.gameObject, bulletTrailDuration); //how long the trail takes
+
+
+        /*GameObject trail = Instantiate(trailPrefab, spawnPoint.position, Quaternion.identity); //spawns the trail
+        StartCoroutine(MoveTrail(trail, targetPoint));*/
 
         #endregion
     }
 
 
-    IEnumerator MoveTrail(GameObject trail, Vector3 targetPos) //moves the trail
+    /* IEnumerator MoveTrail(GameObject trail, Vector3 targetPos) //moves the trail
     {
         Vector3 startPos = trail.transform.position;
 
         float time = 0f;
 
-        while (time < 0.05f)
+        while (time < bulletTrailDuration)
         {
-            trail.transform.position = Vector3.Lerp(startPos, targetPos, time / 0.05f); //smoothly goes between pos 1 to pos 2
+            trail.transform.position = Vector3.Lerp(startPos, targetPos, time / bulletTrailDuration); //smoothly goes between pos 1 to pos 2
             time += Time.deltaTime;
             yield return null;
         }
@@ -284,7 +300,7 @@ public class _TankControl : MonoBehaviour
         trail.transform.position = targetPos;
 
         Destroy(trail, 0.1f);
-    }
+    }*/
 
 
     IEnumerator ShootingControl()
