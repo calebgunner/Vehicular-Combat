@@ -14,18 +14,26 @@ public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIE
     dodging
 }
 
+
+public enum ReticleControl
+{
+    onTarget,
+    onTargetAndShoot,
+    offTarget,
+}
+
 public class _TankControl : MonoBehaviour
 {
     /// <summary>
-    ///  ADD SOME LITTLE AIM ASSIST
-    ///  ENEMY HEALTH BAR LOOKS AT PLAYER
-    ///  ENEMY CAN ATTACK (STATIC, ROTATES, SHOWS LINE RENDERER BEFORE SHOOTING, SHOOTS, RELOADS... LIKE ARKHAM).. NO CHATGPT
-    ///  ADD FEEDBACK 
-    ///     I.E. PARTICLES WHEN BULLET HITS, 
-    ///     ENEMY EXPLOSION WHEN DEAD, 
-    ///     PARTICLE EFECT FROM MUZZLE, 
-    ///     DODGING EFFECT, 
-    ///     SMALL CHANGE IN COLOUR WHEN ENEMY HIT
+    ///  -  ADD SOME LITTLE AIM ASSIST
+    ///  -  ENEMY CAN ATTACK (STATIC, ROTATES, SHOWS LINE RENDERER BEFORE SHOOTING, SHOOTS, RELOADS... LIKE ARKHAM).. NO CHATGPT
+    ///  (AFTER EVERYTHING) 
+    ///  -  ADD FEEDBACK 
+    ///         I.E. PARTICLES WHEN BULLET HITS, 
+    ///         ENEMY EXPLOSION WHEN DEAD, 
+    ///         PARTICLE EFECT FROM MUZZLE, 
+    ///         DODGING EFFECT, 
+    ///         SMALL CHANGE IN COLOUR WHEN ENEMY HIT
     ///     
     /// </summary>
 
@@ -61,6 +69,9 @@ public class _TankControl : MonoBehaviour
     public LayerMask otherLayer;
     RaycastHit hit;
 
+    [Space]
+    public ReticleControl theReticleControl;
+
 
     [Header("references")]
     _TankCamera tC;
@@ -87,6 +98,7 @@ public class _TankControl : MonoBehaviour
 
         StateMachine();
         AimingDirections();
+        ReticleControlFunction();
 
         #endregion
     }
@@ -332,6 +344,26 @@ public class _TankControl : MonoBehaviour
             yield return new WaitForSeconds(shootCooldown1); //ZERO SINCE THE "SHOOTING ANIMATION" IS A LONG ENOUGH WAIT
             canShoot1 = true;
         }
+    }
+
+    #endregion
+
+
+    #region RETICLE CONTROL:
+
+    void ReticleControlFunction()
+    {
+        //Basic Control of the Game's Reticle/Crosshair
+        if (isOnTarget) 
+        {
+            if (isShooting1 || isHoldingShoot) 
+                theReticleControl = ReticleControl.onTargetAndShoot;
+            else
+                theReticleControl = ReticleControl.onTarget;
+        }
+
+        else
+            theReticleControl = ReticleControl.offTarget;
     }
 
     #endregion
