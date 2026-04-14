@@ -2,23 +2,20 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class _Enemy : MonoBehaviour
+public class _EnemyMovement : MonoBehaviour
 {
-    [Header("enemy health bar settings")]
-    public Slider enemyHealthBar;
-    public float startingEnemyHealth = 100;
-    public float playerDamage;
+    // *** This is placed on the PARENT OBJECT OF THE ENEMY ***
 
     [Header("turret head movement")]
     public Transform headPivot; // Change to "head" when you import the final product
     public bool enemyIsTurret = false;
+    public bool canMove;
     Transform player;
 
 
     private void Awake()
     {
-        enemyHealthBar.value = startingEnemyHealth;
-        
+        //canMove = true;
 
         if (headPivot != null) //we only check for the player target if there is a HEADPIVOT TRANSFORM
         {
@@ -31,28 +28,12 @@ public class _Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (enemyIsTurret)
+        if (enemyIsTurret && canMove)
         {
             HeadMovement();
         }
         
     }
-
-
-    #region ENEMY TAKES DAMAGE:
-
-    //This is called in the "TankControl" script when the ENEMY TAKES DAMAGE
-    public void EnemyTakesDamage() 
-    {
-        enemyHealthBar.value -= playerDamage;
-
-        if (enemyHealthBar.value <= 0)
-        {
-            this.gameObject.SetActive(false);
-        }
-    }
-
-    #endregion
 
 
     #region HEAD FOLLOWS PLAYER:

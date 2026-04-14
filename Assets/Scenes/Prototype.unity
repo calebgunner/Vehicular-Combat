@@ -1074,6 +1074,7 @@ GameObject:
   - component: {fileID: 272815982}
   - component: {fileID: 272815981}
   - component: {fileID: 272815984}
+  - component: {fileID: 272815985}
   m_Layer: 7
   m_Name: Target (7)
   m_TagString: Enemy
@@ -1189,11 +1190,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &272815985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272815979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1225133585}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 272815979}
 --- !u!1 &318700856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1703,6 +1718,184 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f97580c57f90be641b361000d2111d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_CanvasFacesCam
+--- !u!1 &375952280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 375952282}
+  - component: {fileID: 375952281}
+  - component: {fileID: 375952284}
+  - component: {fileID: 375952283}
+  m_Layer: 7
+  m_Name: Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!120 &375952281
+LineRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375952280}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 0.4
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: -1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 0
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
+--- !u!4 &375952282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375952280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1944834514}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &375952283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375952280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be5e506572afe4419d4d7fa9e74d8a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_LineCollider
+  playerInCrosshair: 0
+--- !u!65 &375952284
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375952280}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.25, y: 0.25, z: 1}
+  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!1 &453839561
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,6 +1909,7 @@ GameObject:
   - component: {fileID: 453839564}
   - component: {fileID: 453839563}
   - component: {fileID: 453839566}
+  - component: {fileID: 453839567}
   m_Layer: 7
   m_Name: Target (1)
   m_TagString: Enemy
@@ -1831,11 +2025,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &453839567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453839561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1744570290}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 453839561}
 --- !u!1 &458777638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,7 +2053,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458777639}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
@@ -1880,6 +2088,7 @@ GameObject:
   - component: {fileID: 459592444}
   - component: {fileID: 459592443}
   - component: {fileID: 459592446}
+  - component: {fileID: 459592447}
   m_Layer: 7
   m_Name: Target (11)
   m_TagString: Enemy
@@ -1995,11 +2204,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &459592447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459592441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1945337192}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 459592441}
 --- !u!1 &501304419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2177,6 +2400,7 @@ GameObject:
   - component: {fileID: 569511610}
   - component: {fileID: 569511609}
   - component: {fileID: 569511612}
+  - component: {fileID: 569511613}
   m_Layer: 7
   m_Name: Target (10)
   m_TagString: Enemy
@@ -2292,11 +2516,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &569511613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569511607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1809781028}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 569511607}
 --- !u!1 &569701474
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,6 +2548,7 @@ GameObject:
   - component: {fileID: 569701477}
   - component: {fileID: 569701476}
   - component: {fileID: 569701479}
+  - component: {fileID: 569701480}
   m_Layer: 7
   m_Name: Target (6)
   m_TagString: Enemy
@@ -2425,11 +2664,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &569701480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569701474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 501304421}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 569701474}
 --- !u!1 &585905868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2518,6 +2771,7 @@ GameObject:
   - component: {fileID: 588095054}
   - component: {fileID: 588095053}
   - component: {fileID: 588095056}
+  - component: {fileID: 588095057}
   m_Layer: 7
   m_Name: Target (2)
   m_TagString: Enemy
@@ -2633,11 +2887,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &588095057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588095051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1650556006}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 588095051}
 --- !u!1 &589515750
 GameObject:
   m_ObjectHideFlags: 0
@@ -2651,6 +2919,7 @@ GameObject:
   - component: {fileID: 589515753}
   - component: {fileID: 589515752}
   - component: {fileID: 589515755}
+  - component: {fileID: 589515756}
   m_Layer: 7
   m_Name: Target (4)
   m_TagString: Enemy
@@ -2766,11 +3035,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &589515756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589515750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 965381087}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 589515750}
 --- !u!1 &608968051
 GameObject:
   m_ObjectHideFlags: 0
@@ -2899,9 +3182,10 @@ GameObject:
   - component: {fileID: 611232843}
   - component: {fileID: 611232842}
   - component: {fileID: 611232841}
-  m_Layer: 0
+  - component: {fileID: 611232844}
+  m_Layer: 7
   m_Name: Neck
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2999,6 +3283,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611232839}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &611232844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611232839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
+  enemyHealthBar: {fileID: 708101358}
+  startingEnemyHealth: 100
+  playerDamage: 15
+  parentObject: {fileID: 1944834511}
 --- !u!1 &626796902
 GameObject:
   m_ObjectHideFlags: 0
@@ -3012,6 +3312,7 @@ GameObject:
   - component: {fileID: 626796905}
   - component: {fileID: 626796904}
   - component: {fileID: 626796907}
+  - component: {fileID: 626796908}
   m_Layer: 7
   m_Name: Target (3)
   m_TagString: Enemy
@@ -3127,11 +3428,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &626796908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626796902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 828403568}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 626796902}
 --- !u!1 &653512875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3471,6 +3786,7 @@ GameObject:
   - component: {fileID: 755776300}
   - component: {fileID: 755776299}
   - component: {fileID: 755776302}
+  - component: {fileID: 755776303}
   m_Layer: 7
   m_Name: Target (8)
   m_TagString: Enemy
@@ -3586,11 +3902,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &755776303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755776297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 63543008}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 755776297}
 --- !u!1 &759057820
 GameObject:
   m_ObjectHideFlags: 0
@@ -3604,6 +3934,7 @@ GameObject:
   - component: {fileID: 759057822}
   - component: {fileID: 759057821}
   - component: {fileID: 759057825}
+  - component: {fileID: 759057826}
   m_Layer: 7
   m_Name: Target
   m_TagString: Enemy
@@ -3719,11 +4050,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &759057826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759057820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1974761411}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 759057820}
 --- !u!1 &762636091
 GameObject:
   m_ObjectHideFlags: 0
@@ -3927,6 +4272,7 @@ GameObject:
   - component: {fileID: 789161205}
   - component: {fileID: 789161204}
   - component: {fileID: 789161207}
+  - component: {fileID: 789161208}
   m_Layer: 7
   m_Name: Target (12)
   m_TagString: Enemy
@@ -4042,11 +4388,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &789161208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789161202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1790700474}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 789161202}
 --- !u!1 &792485090
 GameObject:
   m_ObjectHideFlags: 0
@@ -4318,8 +4678,7 @@ GameObject:
   - component: {fileID: 869547055}
   - component: {fileID: 869547058}
   - component: {fileID: 869547057}
-  - component: {fileID: 869547056}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Direction indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4342,27 +4701,6 @@ Transform:
   - {fileID: 458777639}
   m_Father: {fileID: 2085588669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &869547056
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 869547054}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &869547057
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6030,6 +6368,7 @@ GameObject:
   - component: {fileID: 1329604618}
   - component: {fileID: 1329604617}
   - component: {fileID: 1329604620}
+  - component: {fileID: 1329604621}
   m_Layer: 7
   m_Name: Target (9)
   m_TagString: Enemy
@@ -6145,11 +6484,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &1329604621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329604615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1655790875}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 1329604615}
 --- !u!1 &1367716351
 GameObject:
   m_ObjectHideFlags: 0
@@ -8986,6 +9339,7 @@ GameObject:
   - component: {fileID: 1874522190}
   - component: {fileID: 1874522189}
   - component: {fileID: 1874522192}
+  - component: {fileID: 1874522193}
   m_Layer: 7
   m_Name: Target (5)
   m_TagString: Enemy
@@ -9101,11 +9455,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Enemy
+  headPivot: {fileID: 0}
+  enemyIsTurret: 0
+  canMove: 0
+--- !u!114 &1874522193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874522187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 1713274360}
   startingEnemyHealth: 100
   playerDamage: 15
-  headPivot: {fileID: 0}
-  enemyIsTurret: 0
+  parentObject: {fileID: 1874522187}
 --- !u!1 &1884307447
 GameObject:
   m_ObjectHideFlags: 0
@@ -9117,8 +9485,7 @@ GameObject:
   - component: {fileID: 1884307448}
   - component: {fileID: 1884307451}
   - component: {fileID: 1884307450}
-  - component: {fileID: 1884307449}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9140,27 +9507,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2085588669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1884307449
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1884307447}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1884307450
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9458,8 +9804,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1944834514}
-  - component: {fileID: 1944834513}
   - component: {fileID: 1944834512}
+  - component: {fileID: 1944834515}
   m_Layer: 7
   m_Name: Enemy Turret
   m_TagString: Enemy
@@ -9479,32 +9825,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e57d1c6f0e0e641bafbdd5fdf14893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_EnemyTurret
-  enemyHealthBar: {fileID: 708101358}
-  startingEnemyHealth: 100
-  playerDamage: 15
-  headPivot: {fileID: 0}
+  headPivot: {fileID: 2085588669}
   enemyIsTurret: 0
---- !u!65 &1944834513
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1944834511}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3, y: 1.7726719, z: 5}
-  m_Center: {x: 0, y: 0.88633597, z: 1}
+  canMove: 0
 --- !u!4 &1944834514
 Transform:
   m_ObjectHideFlags: 0
@@ -9521,8 +9844,32 @@ Transform:
   - {fileID: 1086449092}
   - {fileID: 611232840}
   - {fileID: 2085588669}
+  - {fileID: 375952282}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1944834515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944834511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146c41762abc1d14db1746f269ca9db5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyAttack
+  theEnemyAttackSequence: 0
+  lineBoxCollider: {fileID: 375952284}
+  spawnPoint: {fileID: 458777639}
+  followTime: 5
+  shotDelayTime: 3
+  shotTime: 0.2
+  lineRenderer: {fileID: 375952281}
+  onTargetColor: {r: 1, g: 0, b: 0, a: 1}
+  offTargetColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  eM: {fileID: 1944834512}
+  lC: {fileID: 375952283}
 --- !u!1 &1945337190
 GameObject:
   m_ObjectHideFlags: 0
@@ -9912,9 +10259,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2085588669}
-  m_Layer: 0
+  - component: {fileID: 2085588670}
+  - component: {fileID: 2085588671}
+  m_Layer: 7
   m_Name: Head Pivot
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9936,6 +10285,43 @@ Transform:
   - {fileID: 869547055}
   m_Father: {fileID: 1944834514}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2085588670
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085588668}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1.5, z: 1.25}
+  m_Center: {x: 0, y: 0.75, z: 0.25}
+--- !u!114 &2085588671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085588668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6063356100862419b9c388d0703175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
+  enemyHealthBar: {fileID: 708101358}
+  startingEnemyHealth: 100
+  playerDamage: 15
+  parentObject: {fileID: 1944834511}
 --- !u!1 &2099123520
 GameObject:
   m_ObjectHideFlags: 0

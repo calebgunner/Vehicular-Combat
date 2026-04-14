@@ -267,7 +267,7 @@ public class _TankControl : MonoBehaviour
             if (hit.transform.CompareTag("Enemy"))
             {
                 // Apply damage here
-                hit.transform.GetComponent<_Enemy>().EnemyTakesDamage();
+                hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f);
