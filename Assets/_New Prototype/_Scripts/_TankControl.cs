@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
@@ -26,8 +27,6 @@ public class _TankControl : MonoBehaviour
 {
     /// <summary>
     ///  -  ADD SOME LITTLE AIM ASSIST
-    ///  -  ENEMY CAN ATTACK (STATIC, ROTATES, SHOWS LINE RENDERER BEFORE SHOOTING, SHOOTS, RELOADS... LIKE ARKHAM).. NO CHATGPT
-    ///  (AFTER EVERYTHING) 
     ///  -  ADD FEEDBACK 
     ///         I.E. PARTICLES WHEN BULLET HITS, 
     ///         ENEMY EXPLOSION WHEN DEAD, 
@@ -51,6 +50,9 @@ public class _TankControl : MonoBehaviour
     public float dodgeForce;
     public float dodgeDuration;
     public float canDodgeDelay;
+
+    [Header("tire control/rotation")]
+    public Transform[] tirePivot;
 
     [Header("shooting mechanics")]
     public Transform spawnPoint;
@@ -99,6 +101,7 @@ public class _TankControl : MonoBehaviour
         StateMachine();
         AimingDirections();
         ReticleControlFunction();
+        TyrePivotRotation();
 
         #endregion
     }
@@ -137,6 +140,7 @@ public class _TankControl : MonoBehaviour
         canDodge = false; 
         isDodging = true;
 
+        // movement direction
         Vector3 localMovement = (tC.cameraTarget.forward * movementInput.z + tC.cameraTarget.right * movementInput.x).normalized;
         localMovement.y = 0f;
 
@@ -153,6 +157,37 @@ public class _TankControl : MonoBehaviour
         yield return new WaitForSeconds(canDodgeDelay);
 
         canDodge = true; //alows the player to dodge after the "canDodgeDelay" has passed
+    }
+
+    #endregion
+
+
+    #region TYRE-PIVOT ROTATION:
+
+    void TyrePivotRotation()
+    {
+        // MOVEMENT DIRECTION
+        Vector3 localMovement = (transform.forward * movementInput.z + transform.right * movementInput.x).normalized;
+
+        // Only rotate tyres if there is movement input
+        if (localMovement != Vector3.zero)
+        {
+            // Get the Y angle from the movement direction
+            float yAngle = Quaternion.LookRotation(localMovement).eulerAngles.y;
+
+            // Create the target rotation
+            Quaternion targetRotation = Quaternion.Euler(0f, yAngle, 0f);
+
+            float tireRotationSpeed = 8;
+
+            // Smoothly rotate all tyre pivots
+            tirePivot[0].rotation = Quaternion.Slerp(tirePivot[0].rotation, targetRotation, tireRotationSpeed * Time.deltaTime);
+            tirePivot[1].rotation = Quaternion.Slerp(tirePivot[1].rotation, targetRotation, tireRotationSpeed * Time.deltaTime);
+            tirePivot[2].rotation = Quaternion.Slerp(tirePivot[2].rotation, targetRotation, tireRotationSpeed * Time.deltaTime);
+            tirePivot[3].rotation = Quaternion.Slerp(tirePivot[3].rotation, targetRotation, tireRotationSpeed * Time.deltaTime);
+
+            // SLERP: ROTATION = Quaternion.Slerp(currentRotation, targetRotation, speed);
+        }
     }
 
     #endregion
@@ -175,7 +210,7 @@ public class _TankControl : MonoBehaviour
     // a. these have an unwated offset at close range.
 
     //2.1 The code you have made
-    
+
     /* void ShootingMechanics()
     {
         #region BULLET RELEASED:

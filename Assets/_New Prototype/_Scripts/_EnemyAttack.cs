@@ -19,24 +19,30 @@ public class _EnemyAttack : MonoBehaviour
     public EnemyAttackSequence theEnemyAttackSequence;
     public BoxCollider lineBoxCollider;
     public Transform spawnPoint;
+    public Rigidbody enemyBullet;
 
     [Space]
     public float followTime;
     public float shotDelayTime;
     public float shotTime;
+    public float bulletSpeed;
 
     [Header("enemy aim")]
     public LineRenderer lineRenderer;
-    public Color onTargetColor = Color.red;
-    public Color offTargetColor = Color.yellow;
+    Color color_OnTarget = Color.cyan;
+    Color color_OnTargetReadyToShoot = Color.red;
+    Color color_OffTarget = Color.yellow;
 
     [Header("other references")]
     public _EnemyMovement eM;
     public _LineCollider lC;
+    Rigidbody rb;
 
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+
         StartCoroutine(ControlTheAttackSequence()); //In START FUNCTION because START FUNCTION starst it once.... only needs to be started once in this case
     }
 
@@ -69,7 +75,7 @@ public class _EnemyAttack : MonoBehaviour
             theEnemyAttackSequence = EnemyAttackSequence.Shoot;
             eM.canMove = false;
 
-            //Shoot(); // MUST happen here if you want consistency
+            EnemyShoots(); // MUST happen here if you want consistency
 
             yield return new WaitForSeconds(shotTime);
         }
@@ -77,18 +83,24 @@ public class _EnemyAttack : MonoBehaviour
 
 
     // ====== ACTIVATE THE LINE-RENDERER ======
-    void LineRendererActivation()
+    void LineRendererActivation() //ontar - blue, ontar & redy2shoot - red, offtarget - yellow
     {
         // ==== Line Renderer Colour ====
         if (lC.playerInCrosshair)
         {
-            lineRenderer.material.color = onTargetColor;
+            // colour change = visual indicator that the ENEMY is about to shoot
+            if (theEnemyAttackSequence == EnemyAttackSequence.StopAndReadyToShoot)
+                lineRenderer.material.color = color_OnTargetReadyToShoot;
+            else
+                lineRenderer.material.color = color_OnTarget;
         }
         else
-            lineRenderer.material.color = offTargetColor;
+        {
+            lineRenderer.material.color = color_OffTarget;
+        }
 
 
-        // ==== Activate the linerendere ====
+        // ==== Activate the line renderer ====
         if (theEnemyAttackSequence == EnemyAttackSequence.FollowPlayer || theEnemyAttackSequence == EnemyAttackSequence.StopAndReadyToShoot)
         {
             //Activate the line renderer
@@ -120,5 +132,22 @@ public class _EnemyAttack : MonoBehaviour
             lineBoxCollider.enabled = false;
         }
             
+    }
+
+
+    // ====== ENEMY SHOOTS ======
+    void EnemyShoots()
+    {
+        // Instantiate the projectile at the position and rotation of this transform
+        Rigidbody clone;
+        clone = Instantiate(enemyBullet, spawnPoint.position, spawnPoint.rotation);
+
+
+        // Calculate direction
+        Vector3 direction = spawnPoint.forward; //just  shoots forward in the spawn-point direction
+
+
+        // Apply velocity to the projectile
+        clone.linearVelocity = direction * bulletSpeed;
     }
 }

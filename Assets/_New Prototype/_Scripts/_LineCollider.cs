@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class _LineCollider : MonoBehaviour
 {
-    public bool playerInCrosshair;
+    public bool playerInCrosshair; 
 
     private void OnTriggerEnter(Collider other)
     {
