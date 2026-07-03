@@ -27,6 +27,9 @@ public class _EnemyAttack : MonoBehaviour
     public float shotTime;
     public float bulletSpeed;
 
+    [Space]
+    public ParticleSystem muzzleEffectEnemy;
+
     [Header("enemy aim")]
     public LineRenderer lineRenderer;
     Color color_OnTarget = Color.cyan;
@@ -64,6 +67,7 @@ public class _EnemyAttack : MonoBehaviour
             // MOVE
             theEnemyAttackSequence = EnemyAttackSequence.FollowPlayer;
             eM.canMove = true;
+            muzzleEffectEnemy.Stop();
             yield return new WaitForSeconds(followTime);
 
             // STOP / PREP (LINE RENDERER ACTIVATION)
@@ -74,6 +78,7 @@ public class _EnemyAttack : MonoBehaviour
             // SHOOT PHASE (THIS IS THE IMPORTANT FIX)
             theEnemyAttackSequence = EnemyAttackSequence.Shoot;
             eM.canMove = false;
+            muzzleEffectEnemy.Play(); //play the muzzle effect
 
             EnemyShoots(); // MUST happen here if you want consistency
 

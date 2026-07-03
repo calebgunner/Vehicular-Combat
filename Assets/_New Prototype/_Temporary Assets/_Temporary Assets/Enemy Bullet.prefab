@@ -215,7 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b452e40e064bdf7459f5f63af98690fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_EnemyBullet
-  damageToPlayer: 100
+  damageToPlayer: 50
+  collisionEffect: {fileID: 6877495136464513777, guid: fe42766830b66a643a14816851f1c62e, type: 3}
 --- !u!1 &6389760458232642225
 GameObject:
   m_ObjectHideFlags: 0

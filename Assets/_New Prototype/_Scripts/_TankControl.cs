@@ -1,6 +1,4 @@
 using System.Collections;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,17 +23,6 @@ public enum ReticleControl
 
 public class _TankControl : MonoBehaviour
 {
-    /// <summary>
-    ///  -  ADD SOME LITTLE AIM ASSIST
-    ///  -  ADD FEEDBACK 
-    ///         I.E. PARTICLES WHEN BULLET HITS, 
-    ///         ENEMY EXPLOSION WHEN DEAD, 
-    ///         PARTICLE EFECT FROM MUZZLE, 
-    ///         DODGING EFFECT, 
-    ///         SMALL CHANGE IN COLOUR WHEN ENEMY HIT
-    ///     
-    /// </summary>
-
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
     
@@ -50,6 +37,7 @@ public class _TankControl : MonoBehaviour
     public float dodgeForce;
     public float dodgeDuration;
     public float canDodgeDelay;
+    public GameObject speedlines;
 
     [Header("tire control/rotation")]
     public Transform[] tirePivot;
@@ -70,6 +58,10 @@ public class _TankControl : MonoBehaviour
     public LayerMask enemyLayer;
     public LayerMask otherLayer;
     RaycastHit hit;
+
+    [Space]
+    public ParticleSystem muzzleEffectPlayer;
+    public ParticleSystem collisionEffect;
 
     [Space]
     public ReticleControl theReticleControl;
@@ -140,6 +132,8 @@ public class _TankControl : MonoBehaviour
         canDodge = false; 
         isDodging = true;
 
+        speedlines.SetActive(true); //speedlines are ONLY active when player is dodging
+
         // movement direction
         Vector3 localMovement = (tC.cameraTarget.forward * movementInput.z + tC.cameraTarget.right * movementInput.x).normalized;
         localMovement.y = 0f;
@@ -149,6 +143,8 @@ public class _TankControl : MonoBehaviour
         theTankMovement = TankMovement.dodging; //change the movement to 'dodging'
 
         yield return new WaitForSeconds(dodgeDuration);
+
+        speedlines.SetActive(false); //speedlines are ONLY active when player is dodging
 
         canDodge = false; //prevents the player from dodging consecutively 
         isDodging = false;
@@ -303,6 +299,18 @@ public class _TankControl : MonoBehaviour
             {
                 // Apply damage here
                 hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
+
+                // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunTransform.transform.rotation * Quaternion.Euler(0, 180, 0));
+                // Play the effect
+                spawnedEffect.Play();
+            }
+            else if (hit.transform.CompareTag("World"))
+            {
+                // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunTransform.transform.rotation * Quaternion.Euler(0, 180, 0));
+                // Play the effect
+                spawnedEffect.Play();
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f);
@@ -361,6 +369,8 @@ public class _TankControl : MonoBehaviour
 
             ShootingMechanics(); // Apply the shooting mechanics
 
+            muzzleEffectPlayer.Play(); //Play the muzzle effect
+
             // Return to shoot-idle or appropriate state
             //theMovementType = MovementType.Normal_Shot;
             //movementText.text = "Movement : normal-shot";
@@ -372,6 +382,7 @@ public class _TankControl : MonoBehaviour
             yield return new WaitForSeconds(0.17f);
 
             isShooting1 = false;
+            muzzleEffectPlayer.Stop();
 
             //NormalShot_Particle.SetActive(false);
 
