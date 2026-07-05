@@ -6113,7 +6113,6 @@ Transform:
   - {fileID: 1408124627}
   - {fileID: 1239860654}
   - {fileID: 1237932331}
-  - {fileID: 735639171}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &256177108
@@ -6490,8 +6489,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 272815979}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &315523056
 GameObject:
   m_ObjectHideFlags: 0
@@ -7439,8 +7436,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 453839561}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &458777638
 GameObject:
   m_ObjectHideFlags: 0
@@ -7621,8 +7616,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 459592441}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &501304419
 GameObject:
   m_ObjectHideFlags: 0
@@ -8025,8 +8018,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 569511607}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &569701474
 GameObject:
   m_ObjectHideFlags: 0
@@ -8175,8 +8166,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 569701474}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &583853374
 GameObject:
   m_ObjectHideFlags: 0
@@ -8489,8 +8478,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 588095051}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &589515750
 GameObject:
   m_ObjectHideFlags: 0
@@ -8639,8 +8626,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 589515750}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &608968051
 GameObject:
   m_ObjectHideFlags: 0
@@ -8886,8 +8871,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 1944834511}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &626081786
 GameObject:
   m_ObjectHideFlags: 0
@@ -9187,8 +9170,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 626796902}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &653512875
 GameObject:
   m_ObjectHideFlags: 0
@@ -9515,37 +9496,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 3.55, y: 0.55}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &735639170
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 735639171}
-  m_Layer: 0
-  m_Name: Explosion Position (Player)
-  m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &735639171
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735639170}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 256177107}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &755776297
 GameObject:
   m_ObjectHideFlags: 0
@@ -9694,8 +9644,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 755776297}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &759057820
 GameObject:
   m_ObjectHideFlags: 0
@@ -9844,8 +9792,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 759057820}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &762636091
 GameObject:
   m_ObjectHideFlags: 0
@@ -10184,8 +10130,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 789161202}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &792485090
 GameObject:
   m_ObjectHideFlags: 0
@@ -17422,8 +17366,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 1329604615}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &1343088632
 GameObject:
   m_ObjectHideFlags: 0
@@ -18148,156 +18090,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 925037093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1513173305
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1513173306}
-  - component: {fileID: 1513173308}
-  - component: {fileID: 1513173307}
-  m_Layer: 5
-  m_Name: Background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1513173306
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513173305}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1734033147}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 90, y: 38}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1513173307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513173305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1513173308
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513173305}
-  m_CullTransparentMesh: 1
---- !u!1 &1541182768
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1541182769}
-  - component: {fileID: 1541182771}
-  - component: {fileID: 1541182770}
-  m_Layer: 5
-  m_Name: Dodge indicator (off)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1541182769
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1541182768}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1734033147}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.5, y: 0}
-  m_SizeDelta: {x: 73, y: 28}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1541182770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1541182768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.14150941, b: 0.13610828, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1541182771
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1541182768}
-  m_CullTransparentMesh: 1
 --- !u!1 &1544602664
 GameObject:
   m_ObjectHideFlags: 0
@@ -19568,44 +19360,6 @@ Transform:
   - {fileID: 1882377386}
   m_Father: {fileID: 1714700340}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1734033146
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1734033147}
-  m_Layer: 5
-  m_Name: Dodging UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1734033147
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1734033146}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1513173306}
-  - {fileID: 1541182769}
-  - {fileID: 1863118757}
-  m_Father: {fileID: 1904038045}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -835, y: -496}
-  m_SizeDelta: {x: 90, y: 38}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1744570288
 GameObject:
   m_ObjectHideFlags: 0
@@ -21023,81 +20777,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859383604}
   m_CullTransparentMesh: 1
---- !u!1 &1863118754
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1863118757}
-  - component: {fileID: 1863118756}
-  - component: {fileID: 1863118755}
-  m_Layer: 5
-  m_Name: Dodge indicator (on)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1863118755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863118754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.3019608, g: 0.8156863, b: 0.79607844, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1863118756
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863118754}
-  m_CullTransparentMesh: 1
---- !u!224 &1863118757
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863118754}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1734033147}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.5, y: 0}
-  m_SizeDelta: {x: 73, y: 28}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1865348014
 GameObject:
   m_ObjectHideFlags: 0
@@ -21396,8 +21075,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 1874522187}
-  explosionPosition: {fileID: 0}
-  explosionEffect: {fileID: 0}
 --- !u!1 &1882377385
 GameObject:
   m_ObjectHideFlags: 0
@@ -26514,7 +26191,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 884900591}
-  - {fileID: 1734033147}
   - {fileID: 583853376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26542,9 +26218,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a2177659ba4866346956c3fddf3a789f, type: 3}
   playerHealthBar: {fileID: 583853375}
   playerHealthPoints: 0
-  explosionPosition: {fileID: 735639171}
-  explosionEffect: {fileID: 1373087081506470921, guid: 2f8863ff43a796741b7a683ff216da6a, type: 3}
-  dodgeIndicator: {fileID: 1863118754}
 --- !u!1 &1906762490
 GameObject:
   m_ObjectHideFlags: 0
@@ -27321,8 +26994,6 @@ MonoBehaviour:
   startingEnemyHealth: 100
   playerDamage: 15
   parentObject: {fileID: 1944834511}
-  explosionPosition: {fileID: 611232840}
-  explosionEffect: {fileID: 1373087081506470921, guid: 2f8863ff43a796741b7a683ff216da6a, type: 3}
 --- !u!1 &2099123520
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,10 @@ public class _EnemyHealth : MonoBehaviour
     public float playerDamage;
     public GameObject parentObject; // This script is on EACH child object of the Enemy
 
+    [Header("death effect")]
+    public Transform explosionPosition;
+    public GameObject explosionEffect;
+
 
     private void Awake()
     {
@@ -26,6 +30,9 @@ public class _EnemyHealth : MonoBehaviour
         if (enemyHealthBar.value <= 0)
         {
             parentObject.SetActive(false);
+
+            // Add the explosion effect
+            GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);
         }
     }
 

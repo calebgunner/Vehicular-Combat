@@ -11,6 +11,13 @@ public class _GameCanvas : MonoBehaviour
     public Slider playerHealthBar;
     [Range(0f, 100f)] public float playerHealthPoints;
 
+    [Header("death effect")]
+    public Transform explosionPosition;
+    public GameObject explosionEffect;
+
+    [Header("dodge indicator")]
+    public GameObject dodgeIndicator;
+
     [Space]
     _TankControl tControl;
 
@@ -30,6 +37,9 @@ public class _GameCanvas : MonoBehaviour
     {
         //CONTROL PLAYER HEALTH
         playerHealthBar.value = playerHealthPoints;
+
+        //CONTROL DODGE INDICATOR
+        dodgeIndicator.SetActive(tControl.canDodge);
 
         ReticleImageControl();
         PlayerDies();
@@ -53,6 +63,12 @@ public class _GameCanvas : MonoBehaviour
     void PlayerDies()
     {
         if (playerHealthBar.value <= 0)
+        {
+            // Remove the game object
             GameObject.FindWithTag("Player").SetActive(false);
+
+            // Add the explosion effect
+            GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);
+        }
     }
 }
