@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,12 +21,17 @@ public class _GameCanvas : MonoBehaviour
 
     [Space]
     _TankControl tControl;
+    _CameraImpulseShake cIS;
 
 
     private void Awake()
     {
+        //SET THE FPS
+        Application.targetFrameRate = 60;
+
         //REFERENCE OBJECTS
         tControl = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
+        cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
 
         //SET SLIDER VALUE
         playerHealthPoints = 100f;
@@ -41,23 +47,7 @@ public class _GameCanvas : MonoBehaviour
         //CONTROL DODGE INDICATOR
         dodgeIndicator.SetActive(tControl.canDodge);
 
-        ReticleImageControl();
         PlayerDies();
-    }
-
-
-    void ReticleImageControl()
-    {
-        //Control the RETICLE APPEARENCE
-
-        if (tControl.theReticleControl == ReticleControl.onTarget)
-            reticleImage.sprite = differentReticles[0];
-
-        else if (tControl.theReticleControl == ReticleControl.onTargetAndShoot)
-            reticleImage.sprite = differentReticles[1];
-
-        else
-            reticleImage.sprite = differentReticles[2];
     }
 
     void PlayerDies()
@@ -66,6 +56,9 @@ public class _GameCanvas : MonoBehaviour
         {
             // Remove the game object
             GameObject.FindWithTag("Player").SetActive(false);
+
+            // SCREEN SHAKE for theexplosion
+            cIS.ScreenShake(Vector3.up, 0.8f, 1f, CinemachineImpulseDefinition.ImpulseShapes.Explosion);
 
             // Add the explosion effect
             GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);

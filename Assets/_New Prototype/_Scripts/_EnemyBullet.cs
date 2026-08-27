@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class _EnemyBullet : MonoBehaviour
@@ -7,10 +8,12 @@ public class _EnemyBullet : MonoBehaviour
 
     // ==== OTHER REFERENCES ====
     _GameCanvas gC;
+    _CameraImpulseShake cIS;
 
     void Start()
     {
         gC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_GameCanvas>();
+        cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
     }
 
 
@@ -30,6 +33,9 @@ public class _EnemyBullet : MonoBehaviour
 
             // Reduce player health
             gC.playerHealthPoints -= damageToPlayer;
+
+            // CAMERA movement to show that it hit the player
+            cIS.ScreenShake(Vector3.right, 0.45f, 0.5f, CinemachineImpulseDefinition.ImpulseShapes.Bump);
 
             // destroy bullet
             Destroy(this.gameObject);

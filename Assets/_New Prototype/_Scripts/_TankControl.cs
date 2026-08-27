@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,23 +14,25 @@ public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIE
     dodging
 }
 
-
-public enum ReticleControl
+public enum TankShot
 {
-    onTarget,
-    onTargetAndShoot,
-    offTarget,
+    // ==== SHOOTING ====
+    shooting,
+    notShooting
 }
 
 public class _TankControl : MonoBehaviour
 {
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
+
+    [Header("tank enums")]
+    public TankMovement theTankMovement;
+    public TankShot theTankSot;
     
     [Header("normal movement")]
     public bool isMoving;
     public float speed;
-    public TankMovement theTankMovement;
 
     [Header("dodging")]
     public bool isDodging;
@@ -63,20 +66,18 @@ public class _TankControl : MonoBehaviour
     public ParticleSystem muzzleEffectPlayer;
     public ParticleSystem collisionEffect;
 
-    [Space]
-    public ReticleControl theReticleControl;
-
 
     [Header("references")]
     _TankCamera tC;
-
+    _CameraImpulseShake cIS;
 
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        tC = FindAnyObjectByType<_TankCamera>();
+        tC = FindAnyObjectByType<_TankCamera>(); ;
+        cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
     }
 
 
@@ -90,9 +91,9 @@ public class _TankControl : MonoBehaviour
 
         #region OTHER FUNCTIONS:
 
-        StateMachine();
+        StateMachine_Movement();
+        StateMachine__Shooting();
         AimingDirections();
-        ReticleControlFunction();
         TyrePivotRotation();
 
         #endregion
@@ -322,6 +323,9 @@ public class _TankControl : MonoBehaviour
             Debug.DrawLine(ray.origin, targetPoint, Color.red, 0.2f);
         }
 
+        //RECOIL THAT KNOWS THE DIRECTION WHERE THE GUN WAS SHOT and the strngth of the camera shake
+        cIS.ScreenShake(ray.direction, 0.3f, 0.2f, CinemachineImpulseDefinition.ImpulseShapes.Recoil);
+
         #endregion
 
         #region SHOOTING TRAIL CODE:
@@ -379,7 +383,7 @@ public class _TankControl : MonoBehaviour
             //NormalShot_Particle.SetActive(true);
 
             // Wait for shoot animation or duration
-            yield return new WaitForSeconds(0.17f);
+            yield return new WaitForSeconds(0.15f);
 
             isShooting1 = false;
             muzzleEffectPlayer.Stop();
@@ -395,35 +399,24 @@ public class _TankControl : MonoBehaviour
     #endregion
 
 
-    #region RETICLE CONTROL:
+    #region STATE MACHINES:
 
-    void ReticleControlFunction()
-    {
-        //Basic Control of the Game's Reticle/Crosshair
-        if (isOnTarget) 
-        {
-            if (isShooting1 || isHoldingShoot) 
-                theReticleControl = ReticleControl.onTargetAndShoot;
-            else
-                theReticleControl = ReticleControl.onTarget;
-        }
-
-        else
-            theReticleControl = ReticleControl.offTarget;
-    }
-
-    #endregion
-
-
-    #region STATE MACHINE:
-
-    void StateMachine() //CONTROLLING THE STATE OF THE TANK
+    void StateMachine_Movement() //CONTROLLING THE MOVEMENT OF THE TANK
     {
         // ==== MOVEMENT ====
         if (isMoving)
             theTankMovement = TankMovement.movement;
         else
             theTankMovement = TankMovement.idle;
+    }
+
+    void StateMachine__Shooting()
+    {
+        // ==== SHOOTING ====
+        if (isShooting1)
+            theTankSot = TankShot.shooting;
+        else
+            theTankSot= TankShot.notShooting;
     }
 
     #endregion
