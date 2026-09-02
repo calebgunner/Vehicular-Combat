@@ -9,11 +9,13 @@ public class _EnemyBullet : MonoBehaviour
     // ==== OTHER REFERENCES ====
     _GameCanvas gC;
     _CameraImpulseShake cIS;
+    _ControllerRumble cR;
 
     void Start()
     {
         gC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_GameCanvas>();
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
+        cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
     }
 
 
@@ -35,7 +37,10 @@ public class _EnemyBullet : MonoBehaviour
             gC.playerHealthPoints -= damageToPlayer;
 
             // CAMERA movement to show that it hit the player
-            cIS.ScreenShake(Vector3.right, 0.45f, 0.5f, CinemachineImpulseDefinition.ImpulseShapes.Bump);
+            cIS.ScreenShake(Vector3.right, 0.4f, 0.25f, CinemachineImpulseDefinition.ImpulseShapes.Bump);
+
+            //CONTROLLER RUMBLE (VIBRATION) when player is hit
+            cR.Rumble(0.4f, 0.6f, 0.2f);
 
             // destroy bullet
             Destroy(this.gameObject);

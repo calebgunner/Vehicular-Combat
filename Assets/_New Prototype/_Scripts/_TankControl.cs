@@ -70,6 +70,7 @@ public class _TankControl : MonoBehaviour
     [Header("references")]
     _TankCamera tC;
     _CameraImpulseShake cIS;
+    _ControllerRumble cR;
 
 
 
@@ -78,6 +79,7 @@ public class _TankControl : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         tC = FindAnyObjectByType<_TankCamera>(); ;
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
+        cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
     }
 
 
@@ -325,6 +327,9 @@ public class _TankControl : MonoBehaviour
 
         //RECOIL THAT KNOWS THE DIRECTION WHERE THE GUN WAS SHOT and the strngth of the camera shake
         cIS.ScreenShake(ray.direction, 0.3f, 0.2f, CinemachineImpulseDefinition.ImpulseShapes.Recoil);
+
+        // CONTROLLER RUMBLE (VIBRATION) WHEN SHOOTING
+        cR.Rumble(0.1f, 0.2f, 0.1f);
 
         #endregion
 

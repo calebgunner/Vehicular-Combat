@@ -22,6 +22,7 @@ public class _GameCanvas : MonoBehaviour
     [Space]
     _TankControl tControl;
     _CameraImpulseShake cIS;
+    _ControllerRumble cR;
 
 
     private void Awake()
@@ -32,6 +33,7 @@ public class _GameCanvas : MonoBehaviour
         //REFERENCE OBJECTS
         tControl = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
+        cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
 
         //SET SLIDER VALUE
         playerHealthPoints = 100f;
@@ -58,7 +60,10 @@ public class _GameCanvas : MonoBehaviour
             GameObject.FindWithTag("Player").SetActive(false);
 
             // SCREEN SHAKE for theexplosion
-            cIS.ScreenShake(Vector3.up, 0.8f, 1f, CinemachineImpulseDefinition.ImpulseShapes.Explosion);
+            cIS.ScreenShake(Vector3.up, 0.8f, 0.6f, CinemachineImpulseDefinition.ImpulseShapes.Explosion);
+
+            //CONTROLLER VIBRATION WHEN THERE'S AN EXPLOSION
+            cR.Rumble(0.8f, 0.4f, 0.5f);
 
             // Add the explosion effect
             GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);
