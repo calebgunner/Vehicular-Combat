@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -34,7 +35,7 @@ public class _EnemyBullet : MonoBehaviour
             effect.Play();
 
             // Reduce player health
-            gC.playerHealthPoints -= damageToPlayer;
+            gC.StartCoroutine(gC.ReduceHealth(damageToPlayer));
 
             // CAMERA movement to show that it hit the player
             cIS.ScreenShake(Vector3.right, 0.4f, 0.25f, CinemachineImpulseDefinition.ImpulseShapes.Bump);
@@ -47,5 +48,5 @@ public class _EnemyBullet : MonoBehaviour
         }
     }
 
-
+    
 }

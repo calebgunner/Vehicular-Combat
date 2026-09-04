@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,9 +7,11 @@ public class _EnemyHealth : MonoBehaviour
 {
     [Header("enemy health bar settings")]
     public Slider enemyHealthBar;
-    public float startingEnemyHealth = 100;
+    float startingEnemyHealth = 100;
     public float playerDamage;
     public GameObject parentObject; // This script is on EACH child object of the Enemy
+    [Space]
+    public Slider damageBar;
 
     [Header("death effect")]
     public Transform explosionPosition;
@@ -20,7 +23,7 @@ public class _EnemyHealth : MonoBehaviour
 
     private void Awake()
     {
-        enemyHealthBar.value = startingEnemyHealth;
+        enemyHealthBar.value = damageBar.value = startingEnemyHealth;
 
 
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
@@ -33,7 +36,7 @@ public class _EnemyHealth : MonoBehaviour
     //This is called in the "TankControl" script when the ENEMY TAKES DAMAGE
     public void EnemyTakesDamage()
     {
-        enemyHealthBar.value -= playerDamage;
+        StartCoroutine(ReduceHealth());
 
         if (enemyHealthBar.value <= 0)
         {
@@ -48,6 +51,19 @@ public class _EnemyHealth : MonoBehaviour
             // Add the explosion effect
             GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);
         }
+    }
+
+
+    // REDUCE ENEMY HEALTH
+    public IEnumerator ReduceHealth()
+    {
+        // Reduce player health
+        enemyHealthBar.value = Mathf.Max(enemyHealthBar.value - playerDamage, 0f);
+
+        yield return new WaitForSeconds(0.25f);
+
+        // Reduce player damage bar
+        damageBar.value = Mathf.Max(damageBar.value - playerDamage, 0f);
     }
 
     #endregion

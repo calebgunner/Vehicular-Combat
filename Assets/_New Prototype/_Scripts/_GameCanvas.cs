@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -16,6 +17,10 @@ public class _GameCanvas : MonoBehaviour
     public Slider playerHealthBar;
     [Range(0f, 100f)] public float playerHealthPoints;
 
+    [Header("player damage bar")]
+    public Slider damageBar;
+    [Range(0f, 100f)] public float damageBarPoints;
+
     [Header("death effect")]
     public Transform explosionPosition;
     public GameObject explosionEffect;
@@ -31,6 +36,7 @@ public class _GameCanvas : MonoBehaviour
     public GameObject DeathMenu;
     public Button restartSelectedButton;
     bool playerIsDead;
+    bool deathTriggered;
 
     [Space]
     _TankControl tControl;
@@ -45,6 +51,7 @@ public class _GameCanvas : MonoBehaviour
         gameIsPaused = false;
         playerIsDead = false;
         EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);        // Set the active button
+        deathTriggered = false;
 
         //SET THE FPS
         Application.targetFrameRate = 60;
@@ -55,8 +62,8 @@ public class _GameCanvas : MonoBehaviour
         cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
 
         //SET SLIDER VALUE
-        playerHealthPoints = 100f;
-        playerHealthBar.value = playerHealthPoints;
+        playerHealthPoints = damageBarPoints = 100f;
+        playerHealthBar.value = damageBar.value = playerHealthPoints;
     }
 
 
@@ -64,6 +71,7 @@ public class _GameCanvas : MonoBehaviour
     {
         //CONTROL PLAYER HEALTH
         playerHealthBar.value = playerHealthPoints;
+        damageBar.value = damageBarPoints;
 
         //CONTROL DODGE INDICATOR
         dodgeIndicator.SetActive(tControl.canDodge);
@@ -85,8 +93,10 @@ public class _GameCanvas : MonoBehaviour
 
     void PlayerDies()
     {
-        if (playerHealthBar.value <= 0)
+        if (playerHealthPoints <= 0 && !deathTriggered)
         {
+            deathTriggered = true;
+
             // Remove the game object
             GameObject.FindWithTag("Player").SetActive(false);
 
@@ -112,7 +122,20 @@ public class _GameCanvas : MonoBehaviour
         //ACTIVATE DEATH MENU
         playerIsDead = true;
 
-        EventSystem.current.SetSelectedGameObject(restartSelectedButton.gameObject);        // Set the active button
+        EventSystem.current.SetSelectedGameObject(restartSelectedButton.gameObject); // Set the active button
+    }
+
+
+    // REDUCE PLAYER HEALTH
+    public IEnumerator ReduceHealth(float damageToPlayer)
+    {
+        // Reduce player health
+        playerHealthPoints = Mathf.Max(playerHealthPoints - damageToPlayer, 0f);
+
+        yield return new WaitForSeconds(0.25f);
+
+        // Reduce player damage bar
+        damageBarPoints = Mathf.Max(damageBarPoints - damageToPlayer, 0f);
     }
 
 
