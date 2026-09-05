@@ -21,7 +21,8 @@ public class _TankCamera : MonoBehaviour
     float yRotation;                    // Horizontal rotation (left/right)
 
     [Header("references")]
-    public Transform gunTransform;
+    public Transform gunHeadHorizontal;
+    public Transform gunHeadVertical;
     public Transform cameraTarget;      //(Empty Child Object on Player) Target that Cinemachine follows and rotates around
 
     [Space]
@@ -60,19 +61,30 @@ public class _TankCamera : MonoBehaviour
     {
         // Apply gun rotation AFTER camera has updated
         // LateUpdate ensures smoother syncing
-        GunFollowCameraDirection();
+        GunFollowCameraDirection_Horizontal();
+        GunFollowCameraDirection_Vertical();
     }
 
 
     // ==== GUN ROTATION ==== 
-    void GunFollowCameraDirection() //will eventually make the head follow the reticle in all directions
+    void GunFollowCameraDirection_Horizontal()
     {
-        // Get ONLY the Y rotation from the camera target
-        float cameraYAngle = cameraTarget.eulerAngles.y;
+        // Get the camera Y rotation RELATIVE to the tank
+        float cameraYAngle = Mathf.DeltaAngle(tC.transform.eulerAngles.y, cameraTarget.eulerAngles.y);
 
         // Apply rotation to the gun
         // Keeps gun aligned with camera direction (left/right only)
-        gunTransform.rotation = Quaternion.Euler(0f, cameraYAngle, 0f);
+        gunHeadHorizontal.localRotation = Quaternion.Euler(0f, cameraYAngle, 0f);
+    }
+
+    void GunFollowCameraDirection_Vertical()
+    {
+        // Get ONLY the X rotation from the camera target
+        float cameraXAngle = cameraTarget.eulerAngles.x;
+
+        // Apply rotation to the gun
+        // Keeps gun aligned with camera direction (up/down only)
+        gunHeadVertical.localRotation = Quaternion.Euler(cameraXAngle, 0f, 0f);
     }
 
 

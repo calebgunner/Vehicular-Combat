@@ -304,14 +304,14 @@ public class _TankControl : MonoBehaviour
                 hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
 
                 // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
-                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunTransform.transform.rotation * Quaternion.Euler(0, 180, 0));
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunHeadHorizontal.transform.rotation * Quaternion.Euler(0, 180, 0));
                 // Play the effect
                 spawnedEffect.Play();
             }
             else if (hit.transform.CompareTag("World"))
             {
                 // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
-                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunTransform.transform.rotation * Quaternion.Euler(0, 180, 0));
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunHeadHorizontal.transform.rotation * Quaternion.Euler(0, 180, 0));
                 // Play the effect
                 spawnedEffect.Play();
             }
