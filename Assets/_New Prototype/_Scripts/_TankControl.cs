@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Timeline;
 
 
 public enum TankMovement //USE IT OUTSIDE THE CLASSES TO MAKE THINGS A LOT EASIER
@@ -45,7 +46,12 @@ public class _TankControl : MonoBehaviour
     [Header("tire control/rotation")]
     public Transform[] tirePivot;
 
+    [Header("aim assist")]
+    public float aimAssistRadius = 1f; //How wide the aim assist detection area is
+    [Range(0f, 1f)] public float aimAssistStrength = 0.1f; //How strongly the shot is pulled towards the enemy
+
     [Header("shooting mechanics")]
+    public GameObject hitMarker;
     public Transform spawnPoint;
     public GameObject trailPrefab;
     public bool isOnTarget;
@@ -66,6 +72,11 @@ public class _TankControl : MonoBehaviour
     public ParticleSystem muzzleEffectPlayer;
     public ParticleSystem collisionEffect;
 
+    [Space]
+    public GameObject BoostRight;
+    public GameObject BoostLeft;
+    private float lastHorizontalDirection = 0f; // -1 for Left, 1 for Right, 0 for None
+
 
     [Header("references")]
     _TankCamera tC;
@@ -85,11 +96,34 @@ public class _TankControl : MonoBehaviour
 
     void Update()
     {
+
+        // DODGE / BOOST EFFECTS
+        if (isDodging)
+        {
+            if (lastHorizontalDirection < 0f) // It's -1 (Left)
+            {
+                BoostRight.SetActive(true);
+                BoostLeft.SetActive(false);
+            }
+            else if (lastHorizontalDirection > 0f) // It's 1 (Right)
+            {
+                BoostLeft.SetActive(true);
+                BoostRight.SetActive(false);
+            }
+        }
+        else
+        {
+            // Turn everything off when not dodging, and reset the memory
+            BoostLeft.SetActive(false);
+            BoostRight.SetActive(false);
+            lastHorizontalDirection = 0f;
+        }
+        
         if (isDodging) return;  //prevents a boolean from overriding this until dodging has completed
+
 
         // ANY MOVEMENT WILL TRIGGER THE BOOLEAN
         isMoving = movementInput.magnitude > 0.01f;
-
 
         #region OTHER FUNCTIONS:
 
@@ -281,12 +315,33 @@ public class _TankControl : MonoBehaviour
         }
     }
 
-     
+    Ray AimAssist(Ray ray)
+    {
+        //Look for an enemy slightly around the player's normal aiming ray
+        if (Physics.SphereCast(ray, aimAssistRadius, out RaycastHit assistHit, 2000f, enemyLayer))
+        {
+            //Get the direction towards the point on the enemy closest to where the player was already aiming
+            Vector3 enemyDirection = (assistHit.point - ray.origin).normalized;
+
+            //Slightly sway the player's normal aim towards that point
+            Vector3 assistedDirection = Vector3.Slerp(ray.direction, enemyDirection, aimAssistStrength);
+
+            //Return a new ray using the assisted direction
+            return new Ray(ray.origin, assistedDirection);
+        }
+
+        //If no enemy is nearby, return the player's normal aim
+        return ray;
+    }
+
+
     void ShootingMechanics() // Hitscan
     {
         #region AIMING / DIRECTION:
 
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)); //creates ray from the center of our screen
+
+        ray = AimAssist(ray); //slightly correct the shot if an enemy is close to the player's aim
 
         Vector3 targetPoint; //where the bullet should go
 
@@ -302,6 +357,10 @@ public class _TankControl : MonoBehaviour
             {
                 // Apply damage here
                 hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
+
+                // Show Hit indicator
+                hitMarker.SetActive(true);
+                StartCoroutine(HideHitMarker());
 
                 // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
                 ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunHeadHorizontal.transform.rotation * Quaternion.Euler(0, 180, 0));
@@ -350,25 +409,6 @@ public class _TankControl : MonoBehaviour
     }
 
 
-    /* IEnumerator MoveTrail(GameObject trail, Vector3 targetPos) //moves the trail
-    {
-        Vector3 startPos = trail.transform.position;
-
-        float time = 0f;
-
-        while (time < bulletTrailDuration)
-        {
-            trail.transform.position = Vector3.Lerp(startPos, targetPos, time / bulletTrailDuration); //smoothly goes between pos 1 to pos 2
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        trail.transform.position = targetPos;
-
-        Destroy(trail, 0.1f);
-    }*/
-
-
     IEnumerator ShootingControl()
     {
         while (isHoldingShoot && canShoot1)
@@ -399,6 +439,14 @@ public class _TankControl : MonoBehaviour
             yield return new WaitForSeconds(shootCooldown1); //ZERO SINCE THE "SHOOTING ANIMATION" IS A LONG ENOUGH WAIT
             canShoot1 = true;
         }
+    }
+
+
+    IEnumerator HideHitMarker()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        hitMarker.SetActive(false);
     }
 
     #endregion
@@ -432,10 +480,14 @@ public class _TankControl : MonoBehaviour
     // MOVEMENT INPUT
     public void OnMove(InputAction.CallbackContext context) //THIS WILL BE FOR STEERING
     {
-        if (context.started || context.performed) //When the left stick is moved
+        if (context.started || context.performed)
         {
             Vector2 stickInput = context.ReadValue<Vector2>();
-            movementInput = new Vector3(stickInput.x, 0f, stickInput.y); //the MovementInput is equal to the MovementInput (ignoring Y-Value)
+            movementInput = new Vector3(stickInput.x, 0f, stickInput.y);
+
+            // Capture and REMEMBER the last direction pushed
+            if (stickInput.x > 0.1f) lastHorizontalDirection = 1f;  // Right
+            if (stickInput.x < -0.1f) lastHorizontalDirection = -1f; // Left
         }
 
         //stick is released
