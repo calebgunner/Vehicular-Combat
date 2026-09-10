@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,7 +12,6 @@ public class _GameCanvas : MonoBehaviour
 {
     [Header("reticle control")]
     public Image reticleImage;
-    public Sprite[] differentReticles;
 
     [Header("player health")]
     public Slider playerHealthBar;
@@ -27,6 +27,10 @@ public class _GameCanvas : MonoBehaviour
 
     [Header("dodge indicator")]
     public GameObject dodgeIndicator;
+
+    [Header("wave text ui")]
+    public TextMeshProUGUI waveText;
+    public int waveNumber;
 
     [Header("ui menu management")]
     public GameObject PauseMenu;
@@ -52,6 +56,7 @@ public class _GameCanvas : MonoBehaviour
         playerIsDead = false;
         EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);        // Set the active button
         deathTriggered = false;
+        waveText.text = "wave 0" + waveNumber;
 
         //SET THE FPS
         Application.targetFrameRate = 60;
@@ -69,6 +74,9 @@ public class _GameCanvas : MonoBehaviour
 
     void Update()
     {
+        //WAVE TEXT
+        waveText.text = "wave 0" + waveNumber;
+
         //CONTROL PLAYER HEALTH
         playerHealthBar.value = playerHealthPoints;
         damageBar.value = damageBarPoints;

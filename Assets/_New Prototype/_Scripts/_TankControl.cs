@@ -359,6 +359,7 @@ public class _TankControl : MonoBehaviour
                 hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
 
                 // Show Hit indicator
+                Debug.Log("Activating: " + hitMarker.name, hitMarker);
                 hitMarker.SetActive(true);
                 StartCoroutine(HideHitMarker());
 
