@@ -317,20 +317,26 @@ public class _TankControl : MonoBehaviour
 
     Ray AimAssist(Ray ray)
     {
-        //Look for an enemy slightly around the player's normal aiming ray
+        //IF THE PLAYER IS ALREADY AIMING DIRECTLY AT AN ENEMY, DON'T CHANGE THEIR AIM
+        if (Physics.Raycast(ray, out RaycastHit directHit, 2000f, enemyLayer))
+        {
+            return ray;
+        }
+
+        //LOOK FOR AN ENEMY SLIGHTLY AROUND THE PLAYER'S NORMAL AIMING RAY
         if (Physics.SphereCast(ray, aimAssistRadius, out RaycastHit assistHit, 2000f, enemyLayer))
         {
-            //Get the direction towards the point on the enemy closest to where the player was already aiming
+            //GET THE DIRECTION TOWARDS THE POINT ON THE ENEMY CLOSEST TO WHERE THE PLAYER WAS AIMING
             Vector3 enemyDirection = (assistHit.point - ray.origin).normalized;
 
-            //Slightly sway the player's normal aim towards that point
+            //SLIGHTLY SWAY THE PLAYER'S NORMAL AIM TOWARDS THAT POINT
             Vector3 assistedDirection = Vector3.Slerp(ray.direction, enemyDirection, aimAssistStrength);
 
-            //Return a new ray using the assisted direction
+            //RETURN THE ASSISTED RAY
             return new Ray(ray.origin, assistedDirection);
         }
 
-        //If no enemy is nearby, return the player's normal aim
+        //NO ENEMY FOUND, USE THE PLAYER'S NORMAL AIM
         return ray;
     }
 
@@ -359,7 +365,6 @@ public class _TankControl : MonoBehaviour
                 hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
 
                 // Show Hit indicator
-                Debug.Log("Activating: " + hitMarker.name, hitMarker);
                 hitMarker.SetActive(true);
                 StartCoroutine(HideHitMarker());
 

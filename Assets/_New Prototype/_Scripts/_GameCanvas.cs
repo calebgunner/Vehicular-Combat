@@ -10,12 +10,23 @@ using UnityEngine.UI;
 
 public class _GameCanvas : MonoBehaviour
 {
+    #region INSPECTOR VALUES:
+
     [Header("reticle control")]
     public Image reticleImage;
 
     [Header("player health")]
     public Slider playerHealthBar;
     [Range(0f, 100f)] public float playerHealthPoints;
+
+    [Header("health boost settings")]
+    public bool boostEffectIsActive;
+    public Image healthBarFill;
+    public Color redColour;
+    public Color greenColour;
+
+    [Space]
+    public Material tankMaterial;
 
     [Header("player damage bar")]
     public Slider damageBar;
@@ -31,6 +42,9 @@ public class _GameCanvas : MonoBehaviour
     [Header("wave text ui")]
     public TextMeshProUGUI waveText;
     public int waveNumber;
+    [Space]
+    public GameObject WaveBar;
+    Slider waveBar_Slider;
 
     [Header("ui menu management")]
     public GameObject PauseMenu;
@@ -48,6 +62,8 @@ public class _GameCanvas : MonoBehaviour
     _ControllerRumble cR;
     public PlayerInput playerInput;
 
+    #endregion
+
 
     private void Awake()
     {
@@ -57,6 +73,8 @@ public class _GameCanvas : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);        // Set the active button
         deathTriggered = false;
         waveText.text = "wave 0" + waveNumber;
+        healthBarFill.color = redColour;
+        tankMaterial.DisableKeyword("_EMISSION");
 
         //SET THE FPS
         Application.targetFrameRate = 60;
@@ -81,6 +99,9 @@ public class _GameCanvas : MonoBehaviour
         playerHealthBar.value = playerHealthPoints;
         damageBar.value = damageBarPoints;
 
+        //BOOST EFFECT (VISUAL INDICATOR OF HEALTH BOOST
+        if (boostEffectIsActive) StartCoroutine(HealthBarColourChange());
+
         //CONTROL DODGE INDICATOR
         dodgeIndicator.SetActive(tControl.canDodge);
             
@@ -98,6 +119,7 @@ public class _GameCanvas : MonoBehaviour
 
         PlayerDies();
     }
+
 
     void PlayerDies()
     {
@@ -140,10 +162,27 @@ public class _GameCanvas : MonoBehaviour
         // Reduce player health
         playerHealthPoints = Mathf.Max(playerHealthPoints - damageToPlayer, 0f);
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
 
         // Reduce player damage bar
         damageBarPoints = Mathf.Max(damageBarPoints - damageToPlayer, 0f);
+    }
+
+
+    // HEALTH FILL COLOUR CHANGE AND EMISSION COLOUR CHANGE (PLAYER GLOWS WHEN THEY RECEIVE HEALTH)
+    IEnumerator HealthBarColourChange()
+    {
+        //Change health bar colour to green
+        healthBarFill.color = greenColour;
+
+        //turn emission on
+        tankMaterial.EnableKeyword("_EMISSION");
+
+        yield return new WaitForSeconds(0.6f);
+
+        healthBarFill.color = redColour;
+        tankMaterial.DisableKeyword("_EMISSION");
+        boostEffectIsActive = false;
     }
 
 

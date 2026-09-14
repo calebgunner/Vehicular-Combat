@@ -28,6 +28,12 @@ public class _EnemyAttack : MonoBehaviour
     public float bulletSpeed;
 
     [Space]
+    float minFollowTime;
+    float maxFollowTime;
+    float minShootDelay;
+    float maxShootDelay;
+
+    [Space]
     public ParticleSystem muzzleEffectEnemy;
 
     [Header("enemy aim")]
@@ -39,12 +45,17 @@ public class _EnemyAttack : MonoBehaviour
     [Header("other references")]
     public _EnemyMovement eM;
     public _LineCollider lC;
+    _GameCanvas gC;
     Rigidbody rb;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        gC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_GameCanvas>();
+
+        //Randomise Attack Sequnce Times
+        AttackeSequenceTimes();
 
         StartCoroutine(ControlTheAttackSequence()); //In START FUNCTION because START FUNCTION starst it once.... only needs to be started once in this case
     }
@@ -84,6 +95,22 @@ public class _EnemyAttack : MonoBehaviour
 
             yield return new WaitForSeconds(shotTime);
         }
+    }
+
+
+    // Attacke sequence management
+    void AttackeSequenceTimes()
+    {
+        // PICK RANDOM VALUES DEPENDING ON THE WAVE TO PREVENT ENEMIES FROM HAVING A UNIFIED ATTACK SEQUENCE (USE ARRAYS TO KEEP TRACK OF ALL OF THE DIFF NUMBERS)
+        float[] minFollowTimes = {4.5f, 4.5f, 4f, 3.8f, 3.5f, 3.2f, 3f, 2.8f, 2.5f, 2.3f, 2f};
+        float[] maxFollowTimes = {6f, 6f, 5.8f, 5.5f, 5.2f, 5f, 4.8f, 4.5f, 4.3f, 4f, 3.8f};
+
+        float[] minShotDelayTimes = {2.0f, 2.0f, 1.9f, 1.8f, 1.8f, 1.7f, 1.7f, 1.6f, 1.6f, 1.5f, 1.5f};
+        float[] maxShotDelayTimes = {2.8f, 2.8f, 2.7f, 2.6f, 2.6f, 2.5f, 2.5f, 2.4f, 2.4f, 2.3f, 2.3f};
+
+        //RANDOMISE THE VALUES BASED ON THE WAVE AND ARRAY NUMBER i.e. Wave 0 uses the values associated with array number 0.
+        followTime = Random.Range(minFollowTimes[gC.waveNumber], maxFollowTimes[gC.waveNumber]);
+        shotDelayTime = Random.Range(minShotDelayTimes[gC.waveNumber], maxShotDelayTimes[gC.waveNumber]);
     }
 
 
