@@ -42,12 +42,10 @@ public class _GameCanvas : MonoBehaviour
     [Header("wave text ui")]
     public TextMeshProUGUI waveText;
     public int waveNumber;
-    [Space]
-    public GameObject WaveBar;
-    Slider waveBar_Slider;
 
     [Header("ui menu management")]
     public GameObject PauseMenu;
+    public TextMeshProUGUI pauseMenuWaveText;
     public Button firstSelectedButton;
     bool gameIsPaused;
     [Space]
@@ -72,7 +70,7 @@ public class _GameCanvas : MonoBehaviour
         playerIsDead = false;
         EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);        // Set the active button
         deathTriggered = false;
-        waveText.text = "wave 0" + waveNumber;
+        waveText.text = pauseMenuWaveText.text = "wave 0" + waveNumber;
         healthBarFill.color = redColour;
         tankMaterial.DisableKeyword("_EMISSION");
 
@@ -93,7 +91,7 @@ public class _GameCanvas : MonoBehaviour
     void Update()
     {
         //WAVE TEXT
-        waveText.text = "wave 0" + waveNumber;
+        waveText.text = pauseMenuWaveText.text = "wave 0" + waveNumber;
 
         //CONTROL PLAYER HEALTH
         playerHealthBar.value = playerHealthPoints;

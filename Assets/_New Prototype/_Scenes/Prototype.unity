@@ -1592,7 +1592,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 94, y: 6}
+  m_SizeDelta: {x: 94, y: 9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &223868102
 GameObject:
@@ -18313,7 +18313,7 @@ GameObject:
   - component: {fileID: 992815999}
   m_Layer: 5
   m_Name: Wave Bar
-  m_TagString: Untagged
+  m_TagString: WaveBarUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18384,9 +18384,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 3
   m_WholeNumbers: 0
-  m_Value: 100
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -19414,7 +19414,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 122.5
+  orthographic size: 180
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -32392,7 +32392,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -1}
-  m_SizeDelta: {x: 500, y: 500}
+  m_SizeDelta: {x: 750, y: 750}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1569666983
 MonoBehaviour:
@@ -41071,9 +41071,9 @@ MonoBehaviour:
   explosionEffect: {fileID: 1373087081506470921, guid: 2f8863ff43a796741b7a683ff216da6a, type: 3}
   dodgeIndicator: {fileID: 922774051}
   waveText: {fileID: 2060635430}
-  waveNumber: 3
-  WaveBar: {fileID: 0}
+  waveNumber: 0
   PauseMenu: {fileID: 1359568317}
+  pauseMenuWaveText: {fileID: 1344998006}
   firstSelectedButton: {fileID: 573853482}
   DeathMenu: {fileID: 63939061}
   restartSelectedButton: {fileID: 163889184}
@@ -41114,8 +41114,15 @@ MonoBehaviour:
   - {fileID: 634522550}
   - {fileID: 1670143575}
   - {fileID: 1815205630}
+  enemyCount: 0
+  updateEnemyCount: 0
   EnemyTurrets: {fileID: 6733234100625279313, guid: 005030dccc5954c4fa3847406cbd962f, type: 3}
   healthBoost: {fileID: 823576173}
+  transitionPhase: 0
+  transitionTime: 0
+  targetTransitionTime: 3
+  startTransitionTimer: 0
+  healthBoostAvailable: 0
 --- !u!1 &1906762490
 GameObject:
   m_ObjectHideFlags: 0
@@ -52574,7 +52581,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 12}
+  m_SizeDelta: {x: 100, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2130269033
 MonoBehaviour:

@@ -17,6 +17,7 @@ public class _EnemyHealth : MonoBehaviour
     public Transform explosionPosition;
     public GameObject explosionEffect;
 
+    _WaveControl wC;
     _CameraImpulseShake cIS;
     _ControllerRumble cR;
 
@@ -28,6 +29,7 @@ public class _EnemyHealth : MonoBehaviour
 
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
         cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
+        wC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_WaveControl>();
     }
 
 
@@ -50,6 +52,9 @@ public class _EnemyHealth : MonoBehaviour
 
             // Add the explosion effect
             GameObject spawnedInstance = Instantiate(explosionEffect, explosionPosition.position, Quaternion.identity);
+
+            //Reduce the ENEMY COUNT when an enemy is killed
+            wC.enemyCount--;
         }
     }
 
