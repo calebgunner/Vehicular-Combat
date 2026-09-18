@@ -50,6 +50,14 @@ public class _TankControl : MonoBehaviour
     public float aimAssistRadius = 1f; //How wide the aim assist detection area is
     [Range(0f, 1f)] public float aimAssistStrength = 0.1f; //How strongly the shot is pulled towards the enemy
 
+    [Header("ammo control and ui")]
+    public float primaryAmmoAmnt;
+    public float primaryAmmoMax;
+    public bool activateSecondaryAttack;
+    public float secondaryFireAmmo = 10;
+    public float damageToEnemy_Primary;
+    public float damageToEnemy_Secondary;
+
     [Header("shooting mechanics")]
     public GameObject hitMarker;
     public Transform spawnPoint;
@@ -61,7 +69,8 @@ public class _TankControl : MonoBehaviour
     [Space]
     public bool isShooting1;
     public float shootCooldown1; // Cooldown time between attacks
-    bool canShoot1 = true;
+    public bool canShoot1 = true;
+    public bool reloading1;
 
     [Space]
     public LayerMask enemyLayer;
@@ -87,6 +96,11 @@ public class _TankControl : MonoBehaviour
 
     void Start()
     {
+        activateSecondaryAttack = false; //until wave 5
+
+        primaryAmmoMax = 40;
+        primaryAmmoAmnt = primaryAmmoMax;
+
         rb = GetComponent<Rigidbody>();
         tC = FindAnyObjectByType<_TankCamera>(); ;
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
@@ -96,6 +110,11 @@ public class _TankControl : MonoBehaviour
 
     void Update()
     {
+        // PLAYER CAN SHOOT
+        if (primaryAmmoAmnt <= 0) reloading1 = true;
+
+        if (primaryAmmoAmnt > 0 && !reloading1) canShoot1 = true;
+        else canShoot1 = false;
 
         // DODGE / BOOST EFFECTS
         if (isDodging)
@@ -340,8 +359,8 @@ public class _TankControl : MonoBehaviour
         return ray;
     }
 
-
-    void ShootingMechanics() // Hitscan
+    #region primary shooting:
+    void ShootingMechanics1() // Hitscan
     {
         #region AIMING / DIRECTION:
 
@@ -362,10 +381,9 @@ public class _TankControl : MonoBehaviour
             if (hit.transform.CompareTag("Enemy"))
             {
                 // Apply damage here
-                hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage();
+                hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage(damageToEnemy_Primary);
 
                 // Show Hit indicator
-                hitMarker.SetActive(true);
                 StartCoroutine(HideHitMarker());
 
                 // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
@@ -414,24 +432,18 @@ public class _TankControl : MonoBehaviour
         #endregion
     }
 
-
-    IEnumerator ShootingControl()
+    IEnumerator ShootingControl1()
     {
         while (isHoldingShoot && canShoot1)
         {
             isShooting1 = true;
-            canShoot1 = false;
 
-            ShootingMechanics(); // Apply the shooting mechanics
+            ShootingMechanics1(); // Apply the shooting mechanics
 
             muzzleEffectPlayer.Play(); //Play the muzzle effect
 
-            // Return to shoot-idle or appropriate state
-            //theMovementType = MovementType.Normal_Shot;
-            //movementText.text = "Movement : normal-shot";
-
-            //Turn off effects
-            //NormalShot_Particle.SetActive(true);
+            // SUbtract Bullet
+            primaryAmmoAmnt--;
 
             // Wait for shoot animation or duration
             yield return new WaitForSeconds(0.15f);
@@ -439,17 +451,126 @@ public class _TankControl : MonoBehaviour
             isShooting1 = false;
             muzzleEffectPlayer.Stop();
 
-            //NormalShot_Particle.SetActive(false);
-
             // Wait for cooldown
             yield return new WaitForSeconds(shootCooldown1); //ZERO SINCE THE "SHOOTING ANIMATION" IS A LONG ENOUGH WAIT
-            canShoot1 = true;
         }
     }
+    #endregion
+
+
+    #region secondary shooting:
+    void ShootingMechanics2() // Hitscan
+    {
+        #region AIMING / DIRECTION:
+
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)); //creates ray from the center of our screen
+
+        ray = AimAssist(ray); //slightly correct the shot if an enemy is close to the player's aim
+
+        Vector3 targetPoint; //where the bullet should go
+
+        #endregion
+
+        #region HITSCAN LOGIC:
+
+        if (Physics.Raycast(ray, out hit, 2000f)) //shoots invisible line forward
+        {
+            targetPoint = hit.point;
+
+            if (hit.transform.CompareTag("Enemy"))
+            {
+                // Apply damage here
+                hit.transform.GetComponent<_EnemyHealth>().EnemyTakesDamage(damageToEnemy_Secondary);
+
+                // Show Hit indicator
+                StartCoroutine(HideHitMarker());
+
+                // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunHeadHorizontal.transform.rotation * Quaternion.Euler(0, 180, 0));
+                // Play the effect
+                spawnedEffect.Play();
+            }
+            else if (hit.transform.CompareTag("World"))
+            {
+                // Instantiate the particle system at HITPOINT (rotate it to face the player at 180d)
+                ParticleSystem spawnedEffect = Instantiate(collisionEffect, hit.point, tC.gunHeadHorizontal.transform.rotation * Quaternion.Euler(0, 180, 0));
+                // Play the effect
+                spawnedEffect.Play();
+            }
+
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 0.2f);
+        }
+        else
+        {
+            targetPoint = ray.origin + ray.direction * 2000f;
+
+            Debug.DrawLine(ray.origin, targetPoint, Color.red, 0.2f);
+        }
+
+        //STRONGER RECOIL FOR THE POWER SHOT
+        cIS.ScreenShake(ray.direction, 1f, 0.6f, CinemachineImpulseDefinition.ImpulseShapes.Recoil);
+
+        //STRONGER CONTROLLER RUMBLE FOR THE POWER SHOT
+        cR.Rumble(0.6f, 0.8f, 0.3f);
+
+        #endregion
+
+        #region SHOOTING TRAIL CODE:
+
+        //FIRST TRAIL
+        LineRenderer lr1 = Instantiate(trailPrefab).GetComponent<LineRenderer>();
+
+        lr1.SetPosition(0, spawnPoint.position + Camera.main.transform.right * 0.5f);
+        lr1.SetPosition(1, targetPoint + Camera.main.transform.right * 3f);
+
+        Destroy(lr1.gameObject, bulletTrailDuration);
+
+
+        //SECOND TRAIL
+        LineRenderer lr2 = Instantiate(trailPrefab).GetComponent<LineRenderer>();
+
+        lr2.SetPosition(0, spawnPoint.position - Camera.main.transform.right * 0.5f);
+        lr2.SetPosition(1, targetPoint - Camera.main.transform.right * 3f);
+
+        Destroy(lr2.gameObject, bulletTrailDuration);
+
+
+        /*GameObject trail = Instantiate(trailPrefab, spawnPoint.position, Quaternion.identity); //spawns the trail
+        StartCoroutine(MoveTrail(trail, targetPoint));*/
+
+        #endregion
+    }
+
+    IEnumerator ShootingControl2()
+    {
+        while (isHoldingShoot && canShoot1)
+        {
+            isShooting1 = true;
+
+            ShootingMechanics2(); // Apply the shooting mechanics
+
+            muzzleEffectPlayer.Play(); //Play the muzzle effect
+
+            // SUbtract Bullet
+            primaryAmmoAmnt -= secondaryFireAmmo;
+
+            // Wait for shoot animation or duration
+            yield return new WaitForSeconds(0.15f);
+
+            isShooting1 = false;
+            muzzleEffectPlayer.Stop();
+
+            // Wait for cooldown
+            yield return new WaitForSeconds(0.75f); //ZERO SINCE THE "SHOOTING ANIMATION" IS A LONG ENOUGH WAIT
+        }
+    }
+    #endregion
 
 
     IEnumerator HideHitMarker()
     {
+        hitMarker.SetActive(true);
+
         yield return new WaitForSeconds(0.1f);
 
         hitMarker.SetActive(false);
@@ -520,7 +641,7 @@ public class _TankControl : MonoBehaviour
         if (context.performed) //When the button is pressed
         {
             isHoldingShoot = true;
-            StartCoroutine(ShootingControl());
+            StartCoroutine(ShootingControl1());
         }
 
         else if (context.canceled)
@@ -530,6 +651,20 @@ public class _TankControl : MonoBehaviour
     }
 
 
+    // SECONDARY FIRE
+    public void SecondaryFire(InputAction.CallbackContext context)
+    {
+        if (context.performed && canShoot1 && primaryAmmoAmnt >= secondaryFireAmmo && activateSecondaryAttack) //When the button is pressed
+        {
+            isHoldingShoot = true;
+            StartCoroutine(ShootingControl2());
+        }
+
+        else if (context.canceled)
+        {
+            isHoldingShoot = false;
+        }
+    }
 
     #endregion
 }

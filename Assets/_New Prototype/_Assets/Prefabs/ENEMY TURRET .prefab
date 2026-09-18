@@ -114,8 +114,8 @@ GameObject:
   - component: {fileID: 5120930315340701794}
   - component: {fileID: 4555826617259982356}
   - component: {fileID: 7080986490406740456}
-  - component: {fileID: 4009089421555306792}
   - component: {fileID: 4263290568843239747}
+  - component: {fileID: 7036844911913731832}
   m_Layer: 7
   m_Name: 2. ET Body
   m_TagString: Enemy
@@ -195,28 +195,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4009089421555306792
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 349832745930623755}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5895410174176990189, guid: 077044917507fe6499514494d257b9a4, type: 3}
 --- !u!114 &4263290568843239747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +213,27 @@ MonoBehaviour:
   damageBar: {fileID: 2334944027952276327}
   explosionPosition: {fileID: 7369698153632400191}
   explosionEffect: {fileID: 1373087081506470921, guid: 2f8863ff43a796741b7a683ff216da6a, type: 3}
+--- !u!65 &7036844911913731832
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349832745930623755}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.6, y: 2.5842156, z: 3.171259}
+  m_Center: {x: 0, y: 1.2851372, z: 0}
 --- !u!1 &1445017786404856445
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,7 +842,7 @@ GameObject:
   - component: {fileID: 9056251549834078301}
   - component: {fileID: 4349680557961446832}
   - component: {fileID: 8120199754890445548}
-  - component: {fileID: 5955701656459670139}
+  - component: {fileID: 1477007141039889118}
   m_Layer: 7
   m_Name: 1. ET Head
   m_TagString: Enemy
@@ -942,8 +941,8 @@ MonoBehaviour:
   damageBar: {fileID: 2334944027952276327}
   explosionPosition: {fileID: 7369698153632400191}
   explosionEffect: {fileID: 1373087081506470921, guid: 2f8863ff43a796741b7a683ff216da6a, type: 3}
---- !u!64 &5955701656459670139
-MeshCollider:
+--- !u!65 &1477007141039889118
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -960,10 +959,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5638394744435463307, guid: 077044917507fe6499514494d257b9a4, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 5.2, y: 2.6277113, z: 6.470729}
+  m_Center: {x: 0.00000047683716, y: 3.722538, z: 1.3551579}
 --- !u!1 &5426218537066478882
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class _WaveControl : MonoBehaviour
 {
-    // wave > wave complete > transition perdiod > new wave
+    // UNCOMMENT THE THINGS IN START WHEN YOU'RE DONE!!!!
 
     [Header("spawnpoint positions")]
     public Transform[] spawnPoints;
@@ -30,11 +30,13 @@ public class _WaveControl : MonoBehaviour
 
     //REFERENCES FROM OTHER SCRIPTS
     _GameCanvas gC;
+    _TankControl tC;
 
     void Start()
     {
         //SET THE REFERENCES
         gC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_GameCanvas>();
+        tC = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
         WaveBar = GameObject.FindWithTag("WaveBarUI");
         waveBar_Slider = WaveBar.GetComponent<Slider>();
 
@@ -206,9 +208,16 @@ public class _WaveControl : MonoBehaviour
         //BEGIN THE TRANSITION PHASE ONCE THE ENEMY-COUNT IS ZERO
         if (enemyCount == 0 && enemiesSpawned)
         {
-            transitionPhase = true;
+            // FIX: THE EXACT MOMENT WAVE 10 ENEMIES HIT 0, END THE GAME IMMEDIATELY
+            if (gC.waveNumber == 10)
+            {
+                StartCoroutine(gC.ActivateMissionSuccess());
+                gC.StopTimer();
+                return; // Stops the function right here so Wave 11 can never happen!
+            }
 
-            WaveBar.SetActive(true); //Activate Wave Bar to should progress
+            transitionPhase = true;
+            WaveBar.SetActive(true); // Activate Wave Bar to show progress
         }
 
 
@@ -218,6 +227,16 @@ public class _WaveControl : MonoBehaviour
             if ((gC.waveNumber == 2 || gC.waveNumber == 4 || gC.waveNumber == 8) && healthBoostAvailable)
             {
                 healthBoost.SetActive(true); //ACTIVATE THE HEALTH BOOST ICON before these levels start
+            }
+
+            if (gC.waveNumber == 4)
+            {
+                tC.activateSecondaryAttack = true; //activate secondary attack
+            }
+            else if(gC.waveNumber == 7) //increase certain units by wave 7
+            {
+                tC.primaryAmmoMax = 70;
+                gC.growthRate = 40f / 3.25f;
             }
 
 

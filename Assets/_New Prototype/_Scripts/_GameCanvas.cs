@@ -12,6 +12,18 @@ public class _GameCanvas : MonoBehaviour
 {
     #region INSPECTOR VALUES:
 
+    [Header("ammo control and ui")]
+    public GameObject primaryAmmoBar;
+    Slider primaryAmmoSlider;
+    public Image primaryBarFill;
+    public Color bothShotColour;
+    public Color primaryShotColour;
+    [Space]
+    public Color reloadBarColor;
+
+    // 20 divided by 4 seconds
+    public float growthRate;
+
     [Header("reticle control")]
     public Image reticleImage;
 
@@ -50,12 +62,25 @@ public class _GameCanvas : MonoBehaviour
     bool gameIsPaused;
     [Space]
     public GameObject DeathMenu;
+    public TextMeshProUGUI deathMenuWaveText;
     public Button restartSelectedButton;
     bool playerIsDead;
     bool deathTriggered;
+    [Space]
+    public GameObject MissionSuccessMenu;
+    public Button playAgainButtonSelected;
+    public TextMeshProUGUI CompletionTimeText;
+    public float elapsedTime = 0f;
+    public bool isTimerRunning = true; // This controls the timer status
+    public GameObject MissionSuccessText;
+
+    [Header("gameplay UI to turn off")]
+    public GameObject[] gameplayUI;
+    public Image crosshairImage;
+    public Canvas miniMapCanvas;
 
     [Space]
-    _TankControl tControl;
+    _TankControl tC;
     _CameraImpulseShake cIS;
     _ControllerRumble cR;
     public PlayerInput playerInput;
@@ -65,33 +90,53 @@ public class _GameCanvas : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1f;
+
         //UI MANAGEMENT
         gameIsPaused = false;
         playerIsDead = false;
         EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);        // Set the active button
         deathTriggered = false;
-        waveText.text = pauseMenuWaveText.text = "wave 0" + waveNumber;
+
+        WaveTextControl();
+
         healthBarFill.color = redColour;
         tankMaterial.DisableKeyword("_EMISSION");
+        ResetTimer();
 
         //SET THE FPS
         Application.targetFrameRate = 60;
 
         //REFERENCE OBJECTS
-        tControl = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
+        tC = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
         cIS = GameObject.FindWithTag("Player").GetComponent<_CameraImpulseShake>();
         cR = GameObject.FindWithTag("Player").GetComponent<_ControllerRumble>();
 
         //SET SLIDER VALUE
         playerHealthPoints = damageBarPoints = 100f;
         playerHealthBar.value = damageBar.value = playerHealthPoints;
+
+        primaryAmmoSlider = primaryAmmoBar.GetComponent<Slider>();
     }
 
 
     void Update()
     {
+        growthRate = 40f / 3.25f;
+
+        //AMMO SLIDER ACTIVATION
+        primaryAmmoBar.SetActive(true);
+
+        //AMMO BAR CONTROL
+        AmmoSlider();
+
+        // If the timer is stopped, exit the Update loop early
+        if (!isTimerRunning) return;
+
+        TimerControl(); //Start and control the timer
+
         //WAVE TEXT
-        waveText.text = pauseMenuWaveText.text = "wave 0" + waveNumber;
+        WaveTextControl();
 
         //CONTROL PLAYER HEALTH
         playerHealthBar.value = playerHealthPoints;
@@ -101,7 +146,7 @@ public class _GameCanvas : MonoBehaviour
         if (boostEffectIsActive) StartCoroutine(HealthBarColourChange());
 
         //CONTROL DODGE INDICATOR
-        dodgeIndicator.SetActive(tControl.canDodge);
+        dodgeIndicator.SetActive(tC.canDodge);
             
         //SELECT THE RESTART BUTTON WHEN THE DEATH SCREEN IS ACTIVATED
         if (playerIsDead)
@@ -117,6 +162,119 @@ public class _GameCanvas : MonoBehaviour
 
         PlayerDies();
     }
+
+
+    #region PRIMARY AMMO SLIDER
+
+    void AmmoSlider()
+    {
+        //AMMO SLIDER CONTROL
+        primaryAmmoSlider.value = tC.primaryAmmoAmnt;
+        primaryAmmoSlider.maxValue = tC.primaryAmmoMax;
+
+        //RELOAD RIMER
+        if (tC.reloading1) ReloadTimer_Primary();
+
+        // AMMO SLIDER COLOUR
+        if (tC.reloading1) primaryBarFill.color = reloadBarColor;
+        else
+        {
+
+            if(tC.primaryAmmoAmnt >= tC.secondaryFireAmmo) //AMMO ALLOWS BOTH PRIMARY AND SECONDARY FIRE
+                primaryBarFill.color = bothShotColour;
+            else
+                primaryBarFill.color = primaryShotColour; //AMMO ONLY ENOUGH FOR PRIMARY SHOT
+
+        }
+    }
+
+    #endregion
+
+
+    #region WAVE TEXT CONTROL
+
+    void WaveTextControl()
+    {
+        // WAVE TEXT IN-GAME
+        if (waveNumber == 10)
+            waveText.text = "final assault";
+        else
+            waveText.text = "assault 0" + waveNumber;
+
+        // WAVE TEXT IN PAUSE MENU
+        if (waveNumber == 10)
+            pauseMenuWaveText.text = "final assault";
+        else
+            pauseMenuWaveText.text = "assault 0" + waveNumber + "/10";
+
+        // WAVE TEXT IN DEATH SCREEN
+        if (waveNumber == 10)
+            deathMenuWaveText.text = "assault reached: " + waveNumber + "/10";
+        else
+            deathMenuWaveText.text = "assault reached: 0" + waveNumber + "/10";
+
+    }
+
+    #endregion
+
+
+    #region TIMER:
+    void TimerControl()
+    {
+        // Accumulate time
+        elapsedTime += Time.deltaTime;
+
+        // Calculate and format mm:ss
+        int minutes = Mathf.FloorToInt(elapsedTime / 60F);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60F);
+        CompletionTimeText.text = $"clear time: {minutes:D2}:{seconds:D2}";
+    }
+
+
+    // Call this function from another script or a UI Button to STOP the timer
+    public void StopTimer()
+    {
+        isTimerRunning = false;
+    }
+
+    // Call this function to START or RESUME the timer
+    public void StartTimer()
+    {
+        isTimerRunning = true;
+    }
+
+    // Call this function to RESET the timer back to zero
+    public void ResetTimer()
+    {
+        elapsedTime = 0f;
+        CompletionTimeText.text = "00:00";
+    }
+
+    #endregion
+
+
+    #region RELOAD TIME:
+
+    void ReloadTimer_Primary()
+    {
+        if (tC.reloading1)
+        {
+            // Add 6.666 units multiplied by deltaTime every second
+            tC.primaryAmmoAmnt += growthRate * Time.deltaTime;
+
+            // Clamp it so it doesn't overshoot 20 due to framerate math
+            tC.primaryAmmoAmnt = Mathf.Min(tC.primaryAmmoAmnt, tC.primaryAmmoMax);
+
+
+            //CHECK AFTER WE HAVE INCREASED THE AMMO
+            if (tC.primaryAmmoAmnt >= tC.primaryAmmoMax)
+            {
+                tC.reloading1 = false;
+            }
+        }
+    }
+
+    #endregion
 
 
     void PlayerDies()
@@ -151,6 +309,34 @@ public class _GameCanvas : MonoBehaviour
         playerIsDead = true;
 
         EventSystem.current.SetSelectedGameObject(restartSelectedButton.gameObject); // Set the active button
+    }
+
+
+    //FIND A WAY TO MAKE ALL OF THOSE TRANSPARENT INSTEAD OF DISABLYING THEM!!!!!!
+    public IEnumerator ActivateMissionSuccess()
+    {
+        // PLAY MISSION SUCCES SOUND
+
+        //ACTIVATE MISSION SUCCESS TEXT
+        MissionSuccessText.SetActive(true);
+
+        // TURN THIS OFFF (ONLY TURN OFF PARTS OF THE GAMEOBJECT AND NOT THE GAME OBJECTS THEMSELVES)
+        for (int i = 0; i <= 5; i++)
+        {
+            gameplayUI[i].SetActive(false);
+        }
+
+        waveText.enabled = false;
+        crosshairImage.enabled = false;
+
+        // WAIT A SECON AND A HALF
+        yield return new WaitForSeconds(2f);
+
+        // ACTIVATE MISSION SUCCESS MENU
+        MissionSuccessMenu.SetActive(true);
+
+        // ACTIVATE THE START BUTTON FOR THE MENU
+        EventSystem.current.SetSelectedGameObject(playAgainButtonSelected.gameObject); // Set the active button
     }
 
 
@@ -192,6 +378,7 @@ public class _GameCanvas : MonoBehaviour
         {
             PauseMenu.SetActive(true);
             gameIsPaused = true;
+            StopTimer();
 
             playerInput.SwitchCurrentActionMap("UI");
             Time.timeScale = 0f; //FREEZE THE GAME WHEN PAUSED
@@ -202,6 +389,7 @@ public class _GameCanvas : MonoBehaviour
     {
         PauseMenu.SetActive(false);
         gameIsPaused = false;
+        StartTimer();
 
         playerInput.SwitchCurrentActionMap("Player");
         Time.timeScale = 1f;

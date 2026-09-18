@@ -8,7 +8,6 @@ public class _EnemyHealth : MonoBehaviour
     [Header("enemy health bar settings")]
     public Slider enemyHealthBar;
     float startingEnemyHealth = 100;
-    public float playerDamage;
     public GameObject parentObject; // This script is on EACH child object of the Enemy
     [Space]
     public Slider damageBar;
@@ -36,15 +35,15 @@ public class _EnemyHealth : MonoBehaviour
     #region ENEMY TAKES DAMAGE:
 
     //This is called in the "TankControl" script when the ENEMY TAKES DAMAGE
-    public void EnemyTakesDamage()
+    public void EnemyTakesDamage(float playerDamage)
     {
-        StartCoroutine(ReduceHealth());
+        StartCoroutine(ReduceHealth(playerDamage));
 
         if (enemyHealthBar.value <= 0)
         {
             parentObject.SetActive(false);
 
-            // SCREEN SHAKE for theexplosion
+            // SCREEN SHAKE for the explosion
             cIS.ScreenShake(Vector3.up, 0.8f, 0.6f, CinemachineImpulseDefinition.ImpulseShapes.Explosion);
 
             //CONTROLLER VIBRATION WHEN THERE'S AN EXPLOSION
@@ -60,14 +59,14 @@ public class _EnemyHealth : MonoBehaviour
 
 
     // REDUCE ENEMY HEALTH
-    public IEnumerator ReduceHealth()
+    public IEnumerator ReduceHealth(float playerDamage)
     {
-        // Reduce player health
+        // Reduce enemy health
         enemyHealthBar.value = Mathf.Max(enemyHealthBar.value - playerDamage, 0f);
 
         yield return new WaitForSeconds(0.25f);
 
-        // Reduce player damage bar
+        // Reduce enemy damage bar
         damageBar.value = Mathf.Max(damageBar.value - playerDamage, 0f);
     }
 
