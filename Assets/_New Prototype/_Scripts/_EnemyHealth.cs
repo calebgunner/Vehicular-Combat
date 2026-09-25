@@ -31,6 +31,13 @@ public class _EnemyHealth : MonoBehaviour
         wC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_WaveControl>();
     }
 
+    void OnEnable()
+    {
+        // RESET HEALTH EVERY TIME THE ENEMY IS ACTIVATED
+        enemyHealthBar.value = 100f;
+        damageBar.value = 100f;
+    }
+
 
     #region ENEMY TAKES DAMAGE:
 

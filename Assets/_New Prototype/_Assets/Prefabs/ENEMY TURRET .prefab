@@ -208,7 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 5056525347071340742}
-  playerDamage: 15
   parentObject: {fileID: 6733234100625279313}
   damageBar: {fileID: 2334944027952276327}
   explosionPosition: {fileID: 7369698153632400191}
@@ -936,7 +935,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_EnemyHealth
   enemyHealthBar: {fileID: 5056525347071340742}
-  playerDamage: 15
   parentObject: {fileID: 6733234100625279313}
   damageBar: {fileID: 2334944027952276327}
   explosionPosition: {fileID: 7369698153632400191}
@@ -1102,12 +1100,14 @@ MonoBehaviour:
   theEnemyAttackSequence: 0
   lineBoxCollider: {fileID: 574078052742167773}
   spawnPoint: {fileID: 3348742704809625633}
-  enemyBullet: {fileID: 4698037539985346511, guid: 83097a34493faf7498a197ac851da567, type: 3}
   followTime: 5
   shotDelayTime: 1.5
   shotTime: 0.2
   bulletSpeed: 400
   muzzleEffectEnemy: {fileID: 3626030327710811920}
+  collisionEffect: {fileID: 6877495136464513777, guid: fe42766830b66a643a14816851f1c62e, type: 3}
+  trailPrefab: {fileID: 8053492664027094546, guid: 38df6b44e351a69438147d6f353591f6, type: 3}
+  bulletTrailDuration: 0.15
   lineRenderer: {fileID: 1561109118326723041}
   eM: {fileID: 4150446964540949605}
   lC: {fileID: 4865657437354884064}

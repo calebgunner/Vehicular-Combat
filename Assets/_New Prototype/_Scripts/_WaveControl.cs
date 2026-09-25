@@ -31,12 +31,14 @@ public class _WaveControl : MonoBehaviour
     //REFERENCES FROM OTHER SCRIPTS
     _GameCanvas gC;
     _TankControl tC;
+    _ObjectPool oP;
 
     void Start()
     {
         //SET THE REFERENCES
         gC = GameObject.FindWithTag("PlayerCanvas").GetComponent<_GameCanvas>();
         tC = GameObject.FindWithTag("Player").GetComponent<_TankControl>();
+        oP = GameObject.FindWithTag("GameManager").GetComponent<_ObjectPool>();
         WaveBar = GameObject.FindWithTag("WaveBarUI");
         waveBar_Slider = WaveBar.GetComponent<Slider>();
 
@@ -79,13 +81,14 @@ public class _WaveControl : MonoBehaviour
             //TUTORIAL
             case 0:
                 //SPAWN one particular ENEMY TURRET CLOSE TO THE PLAYER THAT ISN'T RANDOMISED TO EXPLAIN THE WAVE SYSTEM and ENEMY ATTACK PATTERN
+                gC.gameplayTips[0].SetActive(true);
                 Instantiate(EnemyTurrets, spawnPoints[19].position, spawnPoints[19].rotation);
                 break;
 
 
             //WAVE 1
             case 1:
-                amountOfEnemies = 3; //SET THE AMOUNT OF ENEMIES SPAWNED FOR THE WAVE
+                amountOfEnemies = 3; //SET THE AMOUNT OF ENEMIES SPAWNED FOR THE 
                 SpawnEnemies();
                 break;
 
@@ -93,6 +96,7 @@ public class _WaveControl : MonoBehaviour
             //WAVE 2
             case 2:
                 amountOfEnemies = 4; //SET THE AMOUNT OF ENEMIES SPAWNED FOR THE WAVE
+                gC.gameplayTips[1].SetActive(true);
                 SpawnEnemies();
                 break;
 
@@ -135,6 +139,7 @@ public class _WaveControl : MonoBehaviour
             //WAVE 8
             case 8:
                 amountOfEnemies = 10; //SET THE AMOUNT OF ENEMIES SPAWNED FOR THE WAVE
+                gC.GameplayNotifications.SetActive(true); //Activate the Ammo Notification;
                 SpawnEnemies();
                 break;
 
@@ -163,6 +168,7 @@ public class _WaveControl : MonoBehaviour
     }
 
 
+
     void SpawnEnemies()
     {
         //MAKE A TEMPORARY LIST USING ALL OF OUR SPAWN POINTS
@@ -177,8 +183,14 @@ public class _WaveControl : MonoBehaviour
             //GET THE TRANSFORM OF THE CHOSEN SPAWN POINT
             Transform chosenSpawnPoint = availableSpawnPoints[randomSpawnPoint];
 
-            //SPAWN THE ENEMY AT THE CHOSEN SPAWN POINT
-            Instantiate(EnemyTurrets, chosenSpawnPoint.position, chosenSpawnPoint.rotation);
+            //GET AN AVAILABLE ENEMY FROM OUR POOL
+            GameObject enemy = oP.GetEnemyTurret();
+
+            //POSITION THE ENEMY AT OUR CHOSEN SPAWN POINT
+            if (enemy != null)
+            {
+                enemy.transform.SetPositionAndRotation(chosenSpawnPoint.position, chosenSpawnPoint.rotation);
+            }
 
             //REMOVE THIS SPAWN POINT SO IT CANNOT BE CHOSEN AGAIN THIS WAVE
             availableSpawnPoints.RemoveAt(randomSpawnPoint);
@@ -202,6 +214,7 @@ public class _WaveControl : MonoBehaviour
             updateEnemyCount = false;
         }
     }
+
 
     void TheTransitionPhse()
     {
@@ -232,6 +245,7 @@ public class _WaveControl : MonoBehaviour
             if (gC.waveNumber == 4)
             {
                 tC.activateSecondaryAttack = true; //activate secondary attack
+                gC.gameplayTips[2].SetActive(true);
             }
             else if(gC.waveNumber == 7) //increase certain units by wave 7
             {

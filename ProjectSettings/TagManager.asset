@@ -8,6 +8,7 @@ TagManager:
   - PlayerCanvas
   - World
   - WaveBarUI
+  - GameManager
   layers:
   - Default
   - TransparentFX

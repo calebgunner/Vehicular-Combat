@@ -24,6 +24,8 @@ public enum TankShot
 
 public class _TankControl : MonoBehaviour
 {
+    #region
+
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public Vector3 movementInput;
 
@@ -92,6 +94,7 @@ public class _TankControl : MonoBehaviour
     _CameraImpulseShake cIS;
     _ControllerRumble cR;
 
+    #endregion
 
 
     void Start()
@@ -533,10 +536,6 @@ public class _TankControl : MonoBehaviour
         lr2.SetPosition(1, targetPoint - Camera.main.transform.right * 3f);
 
         Destroy(lr2.gameObject, bulletTrailDuration);
-
-
-        /*GameObject trail = Instantiate(trailPrefab, spawnPoint.position, Quaternion.identity); //spawns the trail
-        StartCoroutine(MoveTrail(trail, targetPoint));*/
 
         #endregion
     }

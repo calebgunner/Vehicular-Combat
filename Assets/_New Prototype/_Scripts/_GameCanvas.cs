@@ -26,6 +26,7 @@ public class _GameCanvas : MonoBehaviour
 
     [Header("reticle control")]
     public Image reticleImage;
+    public Color gunReloadingColor;
 
     [Header("player health")]
     public Slider playerHealthBar;
@@ -73,6 +74,11 @@ public class _GameCanvas : MonoBehaviour
     public float elapsedTime = 0f;
     public bool isTimerRunning = true; // This controls the timer status
     public GameObject MissionSuccessText;
+    [Space]
+    public GameObject[] gameplayTips;
+    public bool gameplayTipsActive;
+    [Space]
+    public GameObject GameplayNotifications;
 
     [Header("gameplay UI to turn off")]
     public GameObject[] gameplayUI;
@@ -122,6 +128,18 @@ public class _GameCanvas : MonoBehaviour
 
     void Update()
     {
+        //CCROSSHAIR COLOUR CHANGE WHEN RELOADING
+        if (tC.reloading1)
+            reticleImage.color = gunReloadingColor;
+        else
+            reticleImage.color = Color.white;
+
+        if (gameplayTips[0].activeInHierarchy || gameplayTips[1].activeInHierarchy || gameplayTips[2].activeInHierarchy)
+        {
+            gameplayTipsActive = true;
+            gameIsPaused = false; //prevents player from pausing
+        }
+
         growthRate = 40f / 3.25f;
 
         //AMMO SLIDER ACTIVATION
@@ -130,7 +148,7 @@ public class _GameCanvas : MonoBehaviour
         //AMMO BAR CONTROL
         AmmoSlider();
 
-        // If the timer is stopped, exit the Update loop early
+        //IF THE TIMER IS STOPPED, EXIT THE UPDATE LOOP EARLY
         if (!isTimerRunning) return;
 
         TimerControl(); //Start and control the timer
@@ -406,4 +424,22 @@ public class _GameCanvas : MonoBehaviour
     }
 
     #endregion
+
+
+    public void RemoveGameplayTips(InputAction.CallbackContext context)
+    {
+        if (context.performed && gameplayTipsActive)
+        {
+            // CLOSE ALL GAMEPLAY TIPS
+            gameplayTips[0].SetActive(false);
+            gameplayTips[1].SetActive(false);
+            gameplayTips[2].SetActive(false);
+
+            // RESET THE GAMEPLAY TIP BOOLEAN
+            gameplayTipsActive = false;
+
+            // UN-FREEZE THE GAME
+            Time.timeScale = 1f;
+        }
+    }
 }
